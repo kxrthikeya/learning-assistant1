@@ -34,7 +34,10 @@ Deno.serve(async (req: Request) => {
     }
 
     const genAI = new GoogleGenerativeAI(geminiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      apiVersion: "v1"
+    });
 
     let conversationContext = '';
     if (history && history.length > 0) {
