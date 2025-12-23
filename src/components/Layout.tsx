@@ -22,14 +22,68 @@ const navLinks = [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
   const { user, signOut } = useAuthStore();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <div
+        className="fixed left-0 top-0 z-50 flex"
+        onMouseEnter={() => setSidebarOpen(true)}
+        onMouseLeave={() => setSidebarOpen(false)}
+      >
+        <button className="w-14 h-14 flex items-center justify-center bg-slate-900/80 backdrop-blur-xl border-r border-b border-white/5 hover:bg-slate-800/80 transition-all duration-300">
+          <div className="flex flex-col gap-1.5">
+            <div className="w-5 h-0.5 bg-cyan-400 rounded-full transition-all duration-300" />
+            <div className="w-5 h-0.5 bg-cyan-400 rounded-full transition-all duration-300" />
+            <div className="w-5 h-0.5 bg-cyan-400 rounded-full transition-all duration-300" />
+          </div>
+        </button>
+
+        <div
+          className={`fixed left-0 top-0 h-screen w-64 bg-slate-900/95 backdrop-blur-xl border-r border-white/10 shadow-2xl transition-transform duration-300 ease-in-out ${
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+          style={{ paddingLeft: '56px' }}
+        >
+          <div className="h-full overflow-y-auto py-6 px-3 flex flex-col gap-1">
+            {navLinks.map((link) => {
+              const Icon = link.icon;
+              const isActive = location.pathname === link.to;
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                    isActive
+                      ? 'bg-cyan-500/20 text-cyan-300 shadow-lg'
+                      : link.highlight
+                      ? 'text-emerald-300 hover:bg-emerald-500/10'
+                      : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  <Icon className="w-5 h-5 flex-shrink-0" />
+                  <span className="font-medium">{link.label}</span>
+                </Link>
+              );
+            })}
+            {user && (
+              <button
+                onClick={signOut}
+                className="flex items-center gap-3 px-4 py-3 rounded-lg text-red-300 hover:bg-red-500/10 transition-all duration-200 mt-4"
+              >
+                <LogOut className="w-5 h-5 flex-shrink-0" />
+                <span className="font-medium">Sign Out</span>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
       <header className="border-b border-white/5 sticky top-0 z-30 backdrop-blur-xl bg-slate-950/80 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 group">
+          <Link to="/" className="flex items-center gap-3 group ml-14">
             <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shadow-lg group-hover:shadow-cyan-500/30 transition-all duration-300">
               <BookOpen className="w-6 h-6 text-white" />
             </div>
