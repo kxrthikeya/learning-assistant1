@@ -14,47 +14,44 @@ Deno.serve(async (req: Request) => {
 
   try {
     const { summary, difficulty, count } = await req.json();
-    const geminiKey = Deno.env.get('VITE_GEMINI_API_KEY') || Deno.env.get('GEMINI_API_KEY');
+    const geminiKey = Deno.env.get('GEMINI_API_KEY');
 
     if (!geminiKey) {
-      throw new Error('Gemini API key not configured');
+      throw new Error('Gemini API key not configured in Secrets');
     }
 
     const genAI = new GoogleGenerativeAI(geminiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const difficultyGuidance = {
-      easy: 'Basic recall and definitions. Straightforward questions.',
-      medium: 'Application of concepts and moderate reasoning. Multi-step logic.',
-      hard: 'Advanced analysis, complex engineering problems, numerical calculations, and conceptual traps. High difficulty for competitive exams like GATE/JEE.'
+      easy: 'Conceptual understanding and basic principles.',
+      medium: 'Application-based problems requiring multi-step logic.',
+      hard: `GATE/JEE/ESE level complexity. Focus on:
+1. Numerical problem solving (derive values).
+2. Advanced analytical reasoning.
+3. Conceptual traps where options are mathematically or theoretically close.
+4. Higher-order thinking (Bloom's Taxonomy Analysis/Synthesis).`
     };
 
-    const systemPrompt = `You are a high-level engineering exam generator.
-Create ${count} challenging MCQs based ONLY on the following content:
+    const systemPrompt = `You are a Senior Engineering Professor generating a high-stakes competitive exam (like GATE or IES).
+Create ${count} highly challenging MCQs based ONLY on this syllabus/content:
 ${summary}
 
-GUIDELINES:
+STRICT EXAM RULES:
 - Difficulty: ${difficulty.toUpperCase()}
-- Strategy: ${difficultyGuidance[difficulty]}
-- Format: Strictly valid JSON array.
-- Fields per object: "question", "options" (4 strings), "correctIndex" (0-3), "explanation", "difficulty".
-- Requirements: No markdown, no extra text. Just the JSON array.
-- Quality: Ensure options are plausible but only one is correct. Add detailed explanations.`;
+- Level: ${difficultyGuidance[difficulty]}
+- Format: Return ONLY a valid JSON array of objects.
+- Each object: {"question": string, "options": [string, string, string, string], "correctIndex": number, "explanation": string, "difficulty": string}
+- NO trivial recall. NO "What is..." questions.
+- Distractors must be plausible (e.g., if it's a numerical, one distractor should be the result if a common formula error is made).
+- Explanation must include the derivation or logic used.`;
 
     const result = await model.generateContent(systemPrompt);
     const response = await result.response;
     const content = response.text() || '[]';
-    
-    let questions = [];
-    try {
-      const cleanContent = content.replace(/```json
-?/g, '').replace(/```
-?/g, '').trim();
-      questions = JSON.parse(cleanContent);
-    } catch (e) {
-      console.error("JSON parse error:", e, content);
-      throw new Error("Invalid response format from AI");
-    }
+
+    const cleanContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    const questions = JSON.parse(cleanContent);
 
     return new Response(JSON.stringify({ questions }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
