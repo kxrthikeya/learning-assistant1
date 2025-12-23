@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BookOpen, Upload, LayoutDashboard, Sparkles, Brain, ChevronDown, FileText, Zap, Award, AlertCircle, MapPin, Network, Users, Timer, LogOut, Menu, X } from 'lucide-react';
 import { useAuthStore } from '../store/auth-store';
+import { FloatingChat } from './FloatingChat';
 
 const primaryNavItems = [
   { to: '/upload', label: 'Upload' },
@@ -232,6 +233,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <main className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">{children}</div>
       </main>
+
+      <FloatingChat />
     </div>
   );
 }
