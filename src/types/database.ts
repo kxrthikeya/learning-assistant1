@@ -39,6 +39,9 @@ export interface Database {
           total_questions: number;
           correct_answers: number;
           details: QuizDetail[];
+          question_type: 'mcq' | 'essay' | 'fill-blank' | 'matching';
+          confidence_score: number | null;
+          adaptive_difficulty: boolean;
           created_at: string;
         };
         Insert: {
@@ -50,6 +53,9 @@ export interface Database {
           total_questions: number;
           correct_answers: number;
           details?: QuizDetail[];
+          question_type?: 'mcq' | 'essay' | 'fill-blank' | 'matching';
+          confidence_score?: number | null;
+          adaptive_difficulty?: boolean;
           created_at?: string;
         };
         Update: {
@@ -59,6 +65,9 @@ export interface Database {
           total_questions?: number;
           correct_answers?: number;
           details?: QuizDetail[];
+          question_type?: 'mcq' | 'essay' | 'fill-blank' | 'matching';
+          confidence_score?: number | null;
+          adaptive_difficulty?: boolean;
         };
       };
       study_sessions: {
@@ -108,6 +117,407 @@ export interface Database {
           patterns?: PredictionPatterns;
           generated_paper?: GeneratedPaper;
           config?: PredictionConfig;
+        };
+      };
+      user_stats: {
+        Row: {
+          id: string;
+          user_id: string;
+          current_streak: number;
+          longest_streak: number;
+          last_study_date: string | null;
+          total_study_minutes: number;
+          weak_topics: string[];
+          mastery_score: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          current_streak?: number;
+          longest_streak?: number;
+          last_study_date?: string | null;
+          total_study_minutes?: number;
+          weak_topics?: string[];
+          mastery_score?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          current_streak?: number;
+          longest_streak?: number;
+          last_study_date?: string | null;
+          total_study_minutes?: number;
+          weak_topics?: string[];
+          mastery_score?: number;
+          updated_at?: string;
+        };
+      };
+      achievement_badges: {
+        Row: {
+          id: string;
+          name: string;
+          description: string;
+          icon_name: string;
+          requirement_type: 'streak' | 'quizzes' | 'accuracy' | 'topics' | 'time' | 'custom';
+          requirement_value: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          description: string;
+          icon_name: string;
+          requirement_type: 'streak' | 'quizzes' | 'accuracy' | 'topics' | 'time' | 'custom';
+          requirement_value: number;
+          created_at?: string;
+        };
+        Update: {
+          name?: string;
+          description?: string;
+          icon_name?: string;
+          requirement_type?: 'streak' | 'quizzes' | 'accuracy' | 'topics' | 'time' | 'custom';
+          requirement_value?: number;
+        };
+      };
+      user_achievements: {
+        Row: {
+          id: string;
+          user_id: string;
+          badge_id: string;
+          earned_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          badge_id: string;
+          earned_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          badge_id?: string;
+          earned_at?: string;
+        };
+      };
+      flashcards: {
+        Row: {
+          id: string;
+          user_id: string;
+          note_id: string | null;
+          question: string;
+          answer: string;
+          topic: string | null;
+          difficulty: 'easy' | 'medium' | 'hard';
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          note_id?: string | null;
+          question: string;
+          answer: string;
+          topic?: string | null;
+          difficulty?: 'easy' | 'medium' | 'hard';
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          question?: string;
+          answer?: string;
+          topic?: string | null;
+          difficulty?: 'easy' | 'medium' | 'hard';
+          updated_at?: string;
+        };
+      };
+      flashcard_reviews: {
+        Row: {
+          id: string;
+          flashcard_id: string;
+          user_id: string;
+          ease_factor: number;
+          interval_days: number;
+          next_review_date: string;
+          review_count: number;
+          correct_count: number;
+          last_reviewed_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          flashcard_id: string;
+          user_id: string;
+          ease_factor?: number;
+          interval_days?: number;
+          next_review_date?: string;
+          review_count?: number;
+          correct_count?: number;
+          last_reviewed_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          ease_factor?: number;
+          interval_days?: number;
+          next_review_date?: string;
+          review_count?: number;
+          correct_count?: number;
+          last_reviewed_at?: string | null;
+        };
+      };
+      concept_map: {
+        Row: {
+          id: string;
+          user_id: string;
+          subject: string;
+          concepts: Record<string, unknown>;
+          relationships: Record<string, unknown>;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          subject: string;
+          concepts?: Record<string, unknown>;
+          relationships?: Record<string, unknown>;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          subject?: string;
+          concepts?: Record<string, unknown>;
+          relationships?: Record<string, unknown>;
+          updated_at?: string;
+        };
+      };
+      annotations: {
+        Row: {
+          id: string;
+          user_id: string;
+          note_id: string;
+          start_index: number;
+          end_index: number;
+          text: string;
+          color: string;
+          annotation_type: 'highlight' | 'note' | 'important';
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          note_id: string;
+          start_index: number;
+          end_index: number;
+          text: string;
+          color?: string;
+          annotation_type?: 'highlight' | 'note' | 'important';
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          start_index?: number;
+          end_index?: number;
+          text?: string;
+          color?: string;
+          annotation_type?: 'annotation_type' | 'note' | 'important';
+          updated_at?: string;
+        };
+      };
+      voice_notes: {
+        Row: {
+          id: string;
+          user_id: string;
+          note_id: string | null;
+          audio_url: string;
+          transcription: string | null;
+          extracted_points: unknown[];
+          duration_seconds: number | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          note_id?: string | null;
+          audio_url: string;
+          transcription?: string | null;
+          extracted_points?: unknown[];
+          duration_seconds?: number | null;
+          created_at?: string;
+        };
+        Update: {
+          audio_url?: string;
+          transcription?: string | null;
+          extracted_points?: unknown[];
+          duration_seconds?: number | null;
+        };
+      };
+      study_groups: {
+        Row: {
+          id: string;
+          creator_id: string;
+          name: string;
+          description: string | null;
+          subject: string | null;
+          is_public: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          creator_id: string;
+          name: string;
+          description?: string | null;
+          subject?: string | null;
+          is_public?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          name?: string;
+          description?: string | null;
+          subject?: string | null;
+          is_public?: boolean;
+          updated_at?: string;
+        };
+      };
+      study_group_members: {
+        Row: {
+          id: string;
+          group_id: string;
+          user_id: string;
+          joined_at: string;
+        };
+        Insert: {
+          id?: string;
+          group_id: string;
+          user_id: string;
+          joined_at?: string;
+        };
+        Update: {
+          group_id?: string;
+          user_id?: string;
+          joined_at?: string;
+        };
+      };
+      question_bank: {
+        Row: {
+          id: string;
+          user_id: string;
+          title: string;
+          description: string | null;
+          subject: string | null;
+          is_public: boolean;
+          questions: unknown[];
+          share_count: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          title: string;
+          description?: string | null;
+          subject?: string | null;
+          is_public?: boolean;
+          questions?: unknown[];
+          share_count?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          title?: string;
+          description?: string | null;
+          subject?: string | null;
+          is_public?: boolean;
+          questions?: unknown[];
+          share_count?: number;
+          updated_at?: string;
+        };
+      };
+      study_tips: {
+        Row: {
+          id: string;
+          user_id: string;
+          title: string;
+          content: string;
+          topic: string | null;
+          is_featured: boolean;
+          upvotes: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          title: string;
+          content: string;
+          topic?: string | null;
+          is_featured?: boolean;
+          upvotes?: number;
+          created_at?: string;
+        };
+        Update: {
+          title?: string;
+          content?: string;
+          topic?: string | null;
+          is_featured?: boolean;
+          upvotes?: number;
+        };
+      };
+      topic_difficulty_stats: {
+        Row: {
+          id: string;
+          user_id: string;
+          topic: string;
+          difficulty_score: number;
+          accuracy: number;
+          practice_count: number;
+          time_to_mastery_days: number | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          topic: string;
+          difficulty_score?: number;
+          accuracy?: number;
+          practice_count?: number;
+          time_to_mastery_days?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          difficulty_score?: number;
+          accuracy?: number;
+          practice_count?: number;
+          time_to_mastery_days?: number | null;
+          updated_at?: string;
+        };
+      };
+      leaderboard_cache: {
+        Row: {
+          id: string;
+          rank: number | null;
+          user_id: string;
+          score: number;
+          streak: number | null;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          rank?: number | null;
+          user_id: string;
+          score: number;
+          streak?: number | null;
+          updated_at?: string;
+        };
+        Update: {
+          rank?: number | null;
+          score?: number;
+          streak?: number | null;
+          updated_at?: string;
         };
       };
     };

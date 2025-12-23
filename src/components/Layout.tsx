@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, BookOpen, Upload, FileText, Brain, LayoutDashboard, Timer, Sparkles, LogOut, User } from 'lucide-react';
+import { Menu, X, BookOpen, Upload, FileText, Brain, LayoutDashboard, Timer, Sparkles, LogOut, User, Zap, Award, AlertCircle, MapPin, Network, Users, Lightbulb } from 'lucide-react';
 import { useAuthStore } from '../store/auth-store';
 
 const navLinks = [
@@ -8,6 +8,13 @@ const navLinks = [
   { to: '/upload', label: 'Upload', icon: Upload },
   { to: '/summary', label: 'Summary', icon: FileText },
   { to: '/quiz', label: 'Quiz', icon: Brain },
+  { to: '/flashcards', label: 'Flashcards', icon: Zap },
+  { to: '/achievements', label: 'Achievements', icon: Award },
+  { to: '/weakness', label: 'Weakness', icon: AlertCircle },
+  { to: '/study-path', label: 'Study Path', icon: MapPin },
+  { to: '/concepts', label: 'Concepts', icon: Network },
+  { to: '/community', label: 'Community', icon: Users },
+  { to: '/tips', label: 'Tips', icon: Lightbulb },
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/pomodoro', label: 'Pomodoro', icon: Timer },
   { to: '/predictor', label: 'Predictor', icon: Sparkles, highlight: true },

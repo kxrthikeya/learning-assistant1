@@ -9,6 +9,13 @@ import { QuizPage } from './pages/QuizPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { PomodoroPage } from './pages/PomodoroPage';
 import { PredictorPage } from './pages/PredictorPage';
+import { FlashcardsPage } from './pages/FlashcardsPage';
+import { AchievementsPage } from './pages/AchievementsPage';
+import { WeaknessPage } from './pages/WeaknessPage';
+import { StudyPathPage } from './pages/StudyPathPage';
+import { ConceptMapPage } from './pages/ConceptMapPage';
+import { LeaderboardPage } from './pages/LeaderboardPage';
+import { StudyTipsPage } from './pages/StudyTipsPage';
 import { useAuthStore } from './store/auth-store';
 
 function AppContent() {
@@ -38,6 +45,13 @@ function AppContent() {
               <Route path="/upload" element={<UploadPage />} />
               <Route path="/summary" element={<SummaryPage />} />
               <Route path="/quiz" element={<QuizPage />} />
+              <Route path="/flashcards" element={<FlashcardsPage />} />
+              <Route path="/achievements" element={<AchievementsPage />} />
+              <Route path="/weakness" element={<WeaknessPage />} />
+              <Route path="/study-path" element={<StudyPathPage />} />
+              <Route path="/concepts" element={<ConceptMapPage />} />
+              <Route path="/community" element={<LeaderboardPage />} />
+              <Route path="/tips" element={<StudyTipsPage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/pomodoro" element={<PomodoroPage />} />
               <Route path="/predictor" element={<PredictorPage />} />
