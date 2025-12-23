@@ -137,10 +137,10 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
 
   const getColorClass = (total: number) => {
     if (total === 0) return 'bg-[#161b22] hover:bg-[#1c2128] border border-[#30363d]';
-    if (total === 1) return 'bg-[#0e4429] hover:bg-[#00602e] border border-[#0e4429]';
-    if (total === 2) return 'bg-[#006d32] hover:bg-[#00843a] border border-[#006d32]';
-    if (total <= 4) return 'bg-[#26a641] hover:bg-[#2fb84b] border border-[#26a641]';
-    return 'bg-[#39d353] hover:bg-[#45dd5d] border border-[#39d353]';
+    if (total === 1) return 'bg-red-900/80 hover:bg-red-800 border border-red-900';
+    if (total === 2) return 'bg-orange-700/80 hover:bg-orange-600 border border-orange-700';
+    if (total <= 4) return 'bg-yellow-600/80 hover:bg-yellow-500 border border-yellow-600';
+    return 'bg-green-500/80 hover:bg-green-400 border border-green-500';
   };
 
   const handleMouseEnter = (activity: Activity, event: React.MouseEvent) => {
@@ -272,10 +272,10 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
           <span>Less</span>
           <div className="flex gap-[3px]">
             <div className="w-[13px] h-[13px] bg-[#161b22] border border-[#30363d] rounded-[2px]" />
-            <div className="w-[13px] h-[13px] bg-[#0e4429] border border-[#0e4429] rounded-[2px]" />
-            <div className="w-[13px] h-[13px] bg-[#006d32] border border-[#006d32] rounded-[2px]" />
-            <div className="w-[13px] h-[13px] bg-[#26a641] border border-[#26a641] rounded-[2px]" />
-            <div className="w-[13px] h-[13px] bg-[#39d353] border border-[#39d353] rounded-[2px]" />
+            <div className="w-[13px] h-[13px] bg-red-900/80 border border-red-900 rounded-[2px]" />
+            <div className="w-[13px] h-[13px] bg-orange-700/80 border border-orange-700 rounded-[2px]" />
+            <div className="w-[13px] h-[13px] bg-yellow-600/80 border border-yellow-600 rounded-[2px]" />
+            <div className="w-[13px] h-[13px] bg-green-500/80 border border-green-500 rounded-[2px]" />
           </div>
           <span>More</span>
         </div>
@@ -288,8 +288,8 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
         <div
           className="fixed z-50 pointer-events-none"
           style={{
-            left: mousePosition.x + 10,
-            top: mousePosition.y + 10,
+            left: mousePosition.x + 4,
+            top: mousePosition.y + 4,
           }}
         >
           <div className="bg-[#1c2128] border border-[#30363d] rounded-md px-2 py-1.5 shadow-2xl text-xs">
