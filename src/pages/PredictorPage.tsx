@@ -5,6 +5,7 @@ import { GlassCard } from '../components/GlassCard';
 import { Button } from '../components/Button';
 import { useAuthStore } from '../store/auth-store';
 import { extractTextFromFile, analyzePapersAndSyllabus, generatePredictedPaper } from '../lib/ai-service';
+import { useToast } from '../hooks/useToast';
 import type { PredictionPatterns, GeneratedPaper, PredictionConfig } from '../types/database';
 
 interface FileItem { file: File; status: 'pending' | 'processing' | 'done' | 'error'; }
@@ -12,6 +13,7 @@ interface FileItem { file: File; status: 'pending' | 'processing' | 'done' | 'er
 export function PredictorPage() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
+  const { showToast, ToastContainer } = useToast();
   const [syllabusFile, setSyllabusFile] = useState<FileItem | null>(null);
   const [syllabusText, setSyllabusText] = useState('');
   const [paperFiles, setPaperFiles] = useState<FileItem[]>([]);
@@ -33,12 +35,23 @@ export function PredictorPage() {
 
   const handleAnalyze = async () => {
     if (!user) { navigate('/auth'); return; }
-    if (!syllabusFile && !syllabusText.trim()) { alert('Please provide syllabus content'); return; }
-    if (paperFiles.length === 0) { alert('Please upload at least one past paper'); return; }
+    if (!syllabusFile && !syllabusText.trim()) {
+      showToast('Please provide syllabus content (upload a file or paste text)', 'error');
+      return;
+    }
+    if (paperFiles.length === 0) {
+      showToast('Please upload at least one past paper', 'error');
+      return;
+    }
     setAnalyzing(true); setPatterns(null); setGeneratedPaper(null);
+    showToast('Starting pattern analysis...', 'info');
     try {
       let finalSyllabusText = syllabusText;
-      if (syllabusFile) { setSyllabusFile({ ...syllabusFile, status: 'processing' }); finalSyllabusText = await extractTextFromFile(syllabusFile.file); setSyllabusFile({ ...syllabusFile, status: 'done' }); }
+      if (syllabusFile) {
+        setSyllabusFile({ ...syllabusFile, status: 'processing' });
+        finalSyllabusText = await extractTextFromFile(syllabusFile.file);
+        setSyllabusFile({ ...syllabusFile, status: 'done' });
+      }
       const paperTexts: string[] = [];
       for (let i = 0; i < paperFiles.length; i++) {
         setPaperFiles((prev) => prev.map((f, idx) => (idx === i ? { ...f, status: 'processing' } : f)));
@@ -47,18 +60,33 @@ export function PredictorPage() {
         setPaperFiles((prev) => prev.map((f, idx) => (idx === i ? { ...f, status: 'done' } : f)));
       }
       const analyzedPatterns = await analyzePapersAndSyllabus(finalSyllabusText, paperTexts);
-      setPatterns(analyzedPatterns); setActiveTab('patterns');
-    } catch { alert('Analysis failed. Please try again.'); } finally { setAnalyzing(false); }
+      setPatterns(analyzedPatterns);
+      setActiveTab('patterns');
+      showToast('Pattern analysis completed successfully!', 'success');
+    } catch (error) {
+      console.error('Analysis error:', error);
+      showToast('Analysis failed. Please check your API key and try again.', 'error');
+    } finally {
+      setAnalyzing(false);
+    }
   };
 
   const handleGenerate = async () => {
     if (!patterns) return;
     setGenerating(true);
+    showToast('Generating predicted question paper...', 'info');
     try {
       const config: PredictionConfig = { totalQuestions, sections: [{ name: 'Section A - Short Answer', marks: 20 }, { name: 'Section B - Medium Answer', marks: 30 }, { name: 'Section C - Long Answer', marks: 50 }] };
       const paper = await generatePredictedPaper(patterns, config);
-      setGeneratedPaper(paper); setActiveTab('paper');
-    } catch { alert('Generation failed. Please try again.'); } finally { setGenerating(false); }
+      setGeneratedPaper(paper);
+      setActiveTab('paper');
+      showToast('Predicted paper generated successfully!', 'success');
+    } catch (error) {
+      console.error('Generation error:', error);
+      showToast('Paper generation failed. Please try again.', 'error');
+    } finally {
+      setGenerating(false);
+    }
   };
 
   const handleDownload = () => {
@@ -79,6 +107,7 @@ export function PredictorPage() {
 
   return (
     <div className="space-y-6">
+      <ToastContainer />
       <GlassCard className="p-8">
         <div className="flex items-center justify-between mb-6">
           <div><p className="text-xs text-emerald-300 uppercase tracking-[0.3em]">AI Feature</p><h3 className="text-2xl font-bold text-white">Exam Question Paper Predictor</h3><p className="text-slate-300 text-sm">Upload syllabus and past papers to predict likely exam questions.</p></div>
