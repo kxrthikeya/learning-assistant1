@@ -3,17 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { Trash2, TrendingUp, Target, Award, Clock, Flame, Brain, BookOpen, Zap, Lightbulb, CheckSquare, TrendingDown, Sparkles } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
 import { Button } from '../components/Button';
+import { ContributionHeatmap } from '../components/ContributionHeatmap';
 import { useAuthStore } from '../store/auth-store';
 import { useAppStore } from '../store/app-store';
 import { format, subDays, isSameDay } from 'date-fns';
 
 export function DashboardPage() {
   const { user } = useAuthStore();
-  const { quizAttempts, studySessions, fetchQuizAttempts, fetchStudySessions, resetAllData } = useAppStore();
+  const { notes, quizAttempts, studySessions, fetchNotes, fetchQuizAttempts, fetchStudySessions, resetAllData } = useAppStore();
   const navigate = useNavigate();
   const [expandedFeature, setExpandedFeature] = useState<string | null>(null);
 
-  useEffect(() => { if (user) { fetchQuizAttempts(user.id); fetchStudySessions(user.id); } }, [user, fetchQuizAttempts, fetchStudySessions]);
+  useEffect(() => { if (user) { fetchNotes(user.id); fetchQuizAttempts(user.id); fetchStudySessions(user.id); } }, [user, fetchNotes, fetchQuizAttempts, fetchStudySessions]);
 
   const stats = useMemo(() => {
     const totalAttempts = quizAttempts.length;
@@ -70,7 +71,13 @@ export function DashboardPage() {
           <p className="text-gray-400">Your learning progress at a glance</p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <ContributionHeatmap
+          quizAttempts={quizAttempts}
+          uploads={notes}
+          currentStreak={stats.streak}
+        />
+
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           <GlassCard className="p-4">
             <div className="flex justify-between items-start">
               <div>
@@ -98,16 +105,6 @@ export function DashboardPage() {
                 <p className="text-3xl font-bold text-white">{stats.bestScore}%</p>
               </div>
               <Award className="w-5 h-5 text-yellow-400 opacity-50" />
-            </div>
-          </GlassCard>
-
-          <GlassCard className="p-4">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-gray-400 text-sm mb-1">Streak</p>
-                <p className="text-3xl font-bold text-white">{stats.streak} days</p>
-              </div>
-              <Flame className="w-5 h-5 text-orange-400 opacity-50" />
             </div>
           </GlassCard>
         </div>
