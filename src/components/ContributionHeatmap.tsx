@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { subDays, format, startOfDay, isSameDay } from 'date-fns';
+import { subDays, format, startOfDay, isSameDay, getDay, startOfWeek, addDays } from 'date-fns';
 import { X } from 'lucide-react';
 import { GlassCard } from './GlassCard';
 import { Button } from './Button';
@@ -22,12 +22,16 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
   const [selectedDay, setSelectedDay] = useState<Activity | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  const activityData = useMemo(() => {
-    const days: Activity[] = [];
+  const { activityData, weeks, monthLabels, totalActivities } = useMemo(() => {
     const today = startOfDay(new Date());
+    const startDate = subDays(today, 364);
+    const firstDay = startOfWeek(startDate, { weekStartsOn: 0 });
 
-    for (let i = 97; i >= 0; i--) {
-      const date = subDays(today, i);
+    const activityMap = new Map<string, Activity>();
+
+    for (let i = 0; i < 371; i++) {
+      const date = addDays(firstDay, i);
+      const dateKey = format(date, 'yyyy-MM-dd');
       const quizCount = quizAttempts.filter(a =>
         isSameDay(new Date(a.created_at), date)
       ).length;
@@ -35,7 +39,7 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
         isSameDay(new Date(u.created_at), date)
       ).length;
 
-      days.push({
+      activityMap.set(dateKey, {
         date,
         quizCount,
         uploadCount,
@@ -43,7 +47,42 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
       });
     }
 
-    return days;
+    const weeksArray: Activity[][] = [];
+    const monthLabelsArray: Array<{ month: string; offset: number }> = [];
+    let currentMonth = '';
+
+    for (let week = 0; week < 53; week++) {
+      const weekData: Activity[] = [];
+      for (let day = 0; day < 7; day++) {
+        const date = addDays(firstDay, week * 7 + day);
+        const dateKey = format(date, 'yyyy-MM-dd');
+        const activity = activityMap.get(dateKey) || {
+          date,
+          quizCount: 0,
+          uploadCount: 0,
+          total: 0
+        };
+        weekData.push(activity);
+
+        if (day === 0) {
+          const monthName = format(date, 'MMM');
+          if (monthName !== currentMonth) {
+            monthLabelsArray.push({ month: monthName, offset: week });
+            currentMonth = monthName;
+          }
+        }
+      }
+      weeksArray.push(weekData);
+    }
+
+    const totalAct = Array.from(activityMap.values()).reduce((sum, act) => sum + act.total, 0);
+
+    return {
+      activityData: Array.from(activityMap.values()),
+      weeks: weeksArray,
+      monthLabels: monthLabelsArray,
+      totalActivities: totalAct
+    };
   }, [quizAttempts, uploads]);
 
   const getColorClass = (total: number) => {
@@ -54,25 +93,22 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
     return 'bg-cyan-500 hover:bg-cyan-400';
   };
 
-  const weeks = useMemo(() => {
-    const weeksArray: Activity[][] = [];
-    for (let i = 0; i < 14; i++) {
-      weeksArray.push(activityData.slice(i * 7, (i + 1) * 7));
-    }
-    return weeksArray;
-  }, [activityData]);
-
   const handleMouseEnter = (activity: Activity, event: React.MouseEvent) => {
     setHoveredDay(activity);
     setMousePosition({ x: event.clientX, y: event.clientY });
   };
+
+  const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
     <GlassCard className="p-6 border-white/10">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
         <div>
           <h2 className="text-2xl font-bold text-white mb-1">Your Learning Activity</h2>
-          <p className="text-gray-400 text-sm">Track your daily progress over the past 14 weeks</p>
+          <p className="text-gray-400 text-sm">
+            {totalActivities} activities in the last year
+            {currentStreak > 0 && <span className="text-green-400 ml-2">• {currentStreak} day streak</span>}
+          </p>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-lg">
@@ -84,41 +120,71 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
           </div>
           {currentStreak > 0 && (
             <p className="text-sm text-green-400 font-medium hidden lg:block">
-              Keep the streak alive!
+              Keep it going!
             </p>
           )}
         </div>
       </div>
 
-      <div className="overflow-x-auto pb-4">
-        <div className="inline-flex gap-1">
-          {weeks.map((week, weekIndex) => (
-            <div key={weekIndex} className="flex flex-col gap-1">
-              {week.map((activity, dayIndex) => (
-                <div
-                  key={`${weekIndex}-${dayIndex}`}
-                  className={`w-4 h-4 rounded-sm transition-all duration-200 cursor-pointer ${getColorClass(activity.total)}`}
-                  onMouseEnter={(e) => handleMouseEnter(activity, e)}
-                  onMouseLeave={() => setHoveredDay(null)}
-                  onClick={() => setSelectedDay(activity)}
-                  title={`${format(activity.date, 'MMM d, yyyy')}: ${activity.total} activities`}
-                />
+      <div className="overflow-x-auto pb-2">
+        <div className="inline-block min-w-full">
+          <div className="flex gap-1 mb-2 pl-8">
+            {monthLabels.map((label, idx) => (
+              <div
+                key={idx}
+                className="text-xs text-gray-400"
+                style={{ marginLeft: idx === 0 ? 0 : `${(label.offset - (monthLabels[idx - 1]?.offset || 0)) * 12}px` }}
+              >
+                {label.month}
+              </div>
+            ))}
+          </div>
+
+          <div className="flex gap-1">
+            <div className="flex flex-col gap-1 text-xs text-gray-500 pr-2 justify-around">
+              <div className="h-3">{dayLabels[1]}</div>
+              <div className="h-3"></div>
+              <div className="h-3">{dayLabels[3]}</div>
+              <div className="h-3"></div>
+              <div className="h-3">{dayLabels[5]}</div>
+              <div className="h-3"></div>
+            </div>
+
+            <div className="flex gap-1">
+              {weeks.map((week, weekIndex) => (
+                <div key={weekIndex} className="flex flex-col gap-1">
+                  {week.map((activity, dayIndex) => (
+                    <div
+                      key={`${weekIndex}-${dayIndex}`}
+                      className={`w-3 h-3 rounded-sm transition-all duration-200 cursor-pointer ${getColorClass(activity.total)}`}
+                      onMouseEnter={(e) => handleMouseEnter(activity, e)}
+                      onMouseLeave={() => setHoveredDay(null)}
+                      onClick={() => setSelectedDay(activity)}
+                      title={`${format(activity.date, 'MMM d, yyyy')}: ${activity.total} activities`}
+                    />
+                  ))}
+                </div>
               ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400 mt-4 pt-4 border-t border-white/5">
-        <span>Less</span>
-        <div className="flex gap-1">
-          <div className="w-4 h-4 bg-slate-700/50 rounded-sm" title="No activity" />
-          <div className="w-4 h-4 bg-green-600 rounded-sm" title="1-2 activities" />
-          <div className="w-4 h-4 bg-green-500 rounded-sm" title="3-5 activities" />
-          <div className="w-4 h-4 bg-green-400 rounded-sm" title="6-7 activities" />
-          <div className="w-4 h-4 bg-cyan-500 rounded-sm" title="8+ activities (Perfect!)" />
+      <div className="flex flex-wrap items-center justify-between gap-4 text-xs text-gray-400 mt-4 pt-4 border-t border-white/5">
+        <div className="flex items-center gap-2">
+          <span>Less</span>
+          <div className="flex gap-1">
+            <div className="w-3 h-3 bg-slate-700/50 rounded-sm" title="No activity" />
+            <div className="w-3 h-3 bg-green-600 rounded-sm" title="1-2 activities" />
+            <div className="w-3 h-3 bg-green-500 rounded-sm" title="3-5 activities" />
+            <div className="w-3 h-3 bg-green-400 rounded-sm" title="6-7 activities" />
+            <div className="w-3 h-3 bg-cyan-500 rounded-sm" title="8+ activities" />
+          </div>
+          <span>More</span>
         </div>
-        <span>More</span>
+        <div className="text-gray-500">
+          Click any day to see details
+        </div>
       </div>
 
       {hoveredDay && (
