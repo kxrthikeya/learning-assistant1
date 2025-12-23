@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Upload, LayoutDashboard, Sparkles, Brain, ChevronDown, FileText, Zap, Award, AlertCircle, MapPin, Network, Users, Timer, LogOut, Menu, X } from 'lucide-react';
+import { BookOpen, Upload, LayoutDashboard, Sparkles, Brain, ChevronDown, FileText, Zap, Award, AlertCircle, MapPin, Network, Users, Timer, LogOut, Menu, X } from 'lucide-react';
 import { useAuthStore } from '../store/auth-store';
 
 const primaryNavItems = [
@@ -44,11 +44,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <div className="max-w-[1400px] mx-auto flex items-center justify-between gap-4">
           <Link to="/" className="flex items-center gap-3 group flex-shrink-0">
             <div className="flex items-center gap-3">
-              <img
-                src="/gemini_generated_image_u5nf2lu5nf2lu5nf.png"
-                alt="EasyStudy"
-                className="w-10 h-10 group-hover:scale-105 transition-transform duration-300"
-              />
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-lg shadow-cyan-500/30">
+                <BookOpen className="w-5 h-5 text-white" />
+              </div>
               <div className="hidden sm:flex flex-col">
                 <span className="text-xs font-semibold text-cyan-400 tracking-wider">AI-POWERED</span>
                 <span className="text-lg font-bold text-white">EasyStudy</span>
