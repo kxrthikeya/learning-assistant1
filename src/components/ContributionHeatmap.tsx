@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { subDays, format, startOfDay, isSameDay, getDay, startOfWeek, addDays, getYear, subYears, startOfYear, endOfYear, isLeapYear } from 'date-fns';
 import { X, ChevronDown } from 'lucide-react';
+import { createPortal } from 'react-dom';
 import { GlassCard } from './GlassCard';
 import { Button } from './Button';
 
@@ -145,7 +146,35 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
 
   const handleMouseEnter = (activity: Activity, event: React.MouseEvent) => {
     setHoveredDay(activity);
-    setMousePosition({ x: event.clientX, y: event.clientY });
+    updateTooltipPosition(event.clientX, event.clientY);
+  };
+
+  const handleMouseMove = (event: React.MouseEvent) => {
+    if (hoveredDay) {
+      updateTooltipPosition(event.clientX, event.clientY);
+    }
+  };
+
+  const updateTooltipPosition = (clientX: number, clientY: number) => {
+    const tooltipWidth = 250;
+    const tooltipHeight = 50;
+    const offset = 8;
+
+    let x = clientX + offset;
+    let y = clientY + offset;
+
+    if (x + tooltipWidth > window.innerWidth) {
+      x = clientX - tooltipWidth - offset;
+    }
+
+    if (y + tooltipHeight > window.innerHeight) {
+      y = clientY - tooltipHeight - offset;
+    }
+
+    if (x < 0) x = offset;
+    if (y < 0) y = offset;
+
+    setMousePosition({ x, y });
   };
 
   const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -165,7 +194,7 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
                 <ChevronDown className="w-4 h-4" />
               </button>
               {showYearDropdown && (
-                <div className="absolute top-full left-0 mt-2 bg-slate-800 border border-white/20 rounded-lg shadow-2xl overflow-hidden z-50 min-w-[120px]">
+                <div className="absolute top-full left-0 mt-2 bg-slate-800 border border-white/20 rounded-lg shadow-2xl overflow-hidden z-[9997] min-w-[120px]">
                   {availableYears.map((year) => (
                     <button
                       key={year}
@@ -258,6 +287,7 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
                   }}
                   className={`w-[13px] h-[13px] rounded-[2px] transition-all duration-150 cursor-pointer ${getColorClass(activity.total)}`}
                   onMouseEnter={(e) => handleMouseEnter(activity, e)}
+                  onMouseMove={handleMouseMove}
                   onMouseLeave={() => setHoveredDay(null)}
                   onClick={() => setSelectedDay(activity)}
                 />
@@ -284,26 +314,27 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
         </div>
       </div>
 
-      {hoveredDay && (
+      {hoveredDay && createPortal(
         <div
-          className="fixed z-50 pointer-events-none"
+          className="fixed z-[9999] pointer-events-none"
           style={{
-            left: mousePosition.x + 4,
-            top: mousePosition.y + 4,
+            left: mousePosition.x,
+            top: mousePosition.y,
           }}
         >
-          <div className="bg-[#1c2128] border border-[#30363d] rounded-md px-2 py-1.5 shadow-2xl text-xs">
+          <div className="bg-[#1c2128] border border-[#30363d] rounded-md px-3 py-2 shadow-2xl text-xs whitespace-nowrap">
             <p className="text-gray-300 font-medium">
               {hoveredDay.total === 0
                 ? `No activities on ${format(hoveredDay.date, 'MMM d, yyyy')}`
                 : `${hoveredDay.total} ${hoveredDay.total === 1 ? 'activity' : 'activities'} on ${format(hoveredDay.date, 'MMM d, yyyy')}`}
             </p>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {selectedDay && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-[9998] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <GlassCard className="max-w-md w-full p-6">
             <div className="flex items-start justify-between mb-4">
               <div>
