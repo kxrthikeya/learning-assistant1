@@ -133,13 +133,11 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
   }, [quizAttempts, uploads, selectedYear]);
 
   const getColorClass = (total: number) => {
-    if (total === 0) return 'bg-slate-800/50 hover:bg-slate-800';
-    if (total === 1) return 'bg-red-500/80 hover:bg-red-500';
-    if (total === 2) return 'bg-orange-500/80 hover:bg-orange-500';
-    if (total <= 4) return 'bg-yellow-500/80 hover:bg-yellow-500';
-    if (total <= 6) return 'bg-lime-500/80 hover:bg-lime-500';
-    if (total <= 8) return 'bg-green-500/80 hover:bg-green-500';
-    return 'bg-green-600 hover:bg-green-500';
+    if (total === 0) return 'bg-[#161b22] hover:bg-[#1c2128] border border-[#30363d]';
+    if (total === 1) return 'bg-[#0e4429] hover:bg-[#00602e] border border-[#0e4429]';
+    if (total === 2) return 'bg-[#006d32] hover:bg-[#00843a] border border-[#006d32]';
+    if (total <= 4) return 'bg-[#26a641] hover:bg-[#2fb84b] border border-[#26a641]';
+    return 'bg-[#39d353] hover:bg-[#45dd5d] border border-[#39d353]';
   };
 
   const handleMouseEnter = (activity: Activity, event: React.MouseEvent) => {
@@ -208,12 +206,14 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
 
       <div className="overflow-x-auto pb-2">
         <div className="inline-block min-w-full">
-          <div className="flex gap-1 mb-2 pl-8">
+          <div className="flex gap-1 mb-2 pl-[26px]">
             {monthLabels.map((label, idx) => (
               <div
                 key={idx}
-                className="text-xs text-gray-400"
-                style={{ marginLeft: idx === 0 ? 0 : `${(label.offset - (monthLabels[idx - 1]?.offset || 0)) * 12}px` }}
+                className="text-xs text-gray-500"
+                style={{
+                  marginLeft: idx === 0 ? 0 : `${(label.offset - (monthLabels[idx - 1]?.offset || 0)) * 12}px`
+                }}
               >
                 {label.month}
               </div>
@@ -221,13 +221,13 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
           </div>
 
           <div className="flex gap-1">
-            <div className="flex flex-col gap-1 text-xs text-gray-500 pr-2 justify-around">
-              <div className="h-3">{dayLabels[1]}</div>
-              <div className="h-3"></div>
-              <div className="h-3">{dayLabels[3]}</div>
-              <div className="h-3"></div>
-              <div className="h-3">{dayLabels[5]}</div>
-              <div className="h-3"></div>
+            <div className="flex flex-col gap-1 text-xs text-gray-500 pr-1 justify-around">
+              <div className="h-[11px] leading-[11px]">{dayLabels[1]}</div>
+              <div className="h-[11px]"></div>
+              <div className="h-[11px] leading-[11px]">{dayLabels[3]}</div>
+              <div className="h-[11px]"></div>
+              <div className="h-[11px] leading-[11px]">{dayLabels[5]}</div>
+              <div className="h-[11px]"></div>
             </div>
 
             <div className="flex gap-1">
@@ -235,16 +235,15 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
                 <div key={weekIndex} className="flex flex-col gap-1">
                   {week.map((activity, dayIndex) => {
                     if (!activity) {
-                      return <div key={`${weekIndex}-${dayIndex}`} className="w-3 h-3" />;
+                      return <div key={`${weekIndex}-${dayIndex}`} className="w-[11px] h-[11px]" />;
                     }
                     return (
                       <div
                         key={`${weekIndex}-${dayIndex}`}
-                        className={`w-3 h-3 rounded-sm transition-all duration-200 cursor-pointer ${getColorClass(activity.total)}`}
+                        className={`w-[11px] h-[11px] rounded-sm transition-all duration-150 cursor-pointer ${getColorClass(activity.total)}`}
                         onMouseEnter={(e) => handleMouseEnter(activity, e)}
                         onMouseLeave={() => setHoveredDay(null)}
                         onClick={() => setSelectedDay(activity)}
-                        title={`${format(activity.date, 'MMM d, yyyy')}: ${activity.total} activities`}
                       />
                     );
                   })}
@@ -255,17 +254,15 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-4 text-xs text-gray-400 mt-4 pt-4 border-t border-white/5">
+      <div className="flex flex-wrap items-center justify-between gap-4 text-xs text-gray-500 mt-4 pt-4 border-t border-white/5">
         <div className="flex items-center gap-2">
           <span>Less</span>
           <div className="flex gap-1">
-            <div className="w-3 h-3 bg-slate-800/50 rounded-sm" title="No activity" />
-            <div className="w-3 h-3 bg-red-500/80 rounded-sm" title="1 activity" />
-            <div className="w-3 h-3 bg-orange-500/80 rounded-sm" title="2 activities" />
-            <div className="w-3 h-3 bg-yellow-500/80 rounded-sm" title="3-4 activities" />
-            <div className="w-3 h-3 bg-lime-500/80 rounded-sm" title="5-6 activities" />
-            <div className="w-3 h-3 bg-green-500/80 rounded-sm" title="7-8 activities" />
-            <div className="w-3 h-3 bg-green-600 rounded-sm" title="9+ activities" />
+            <div className="w-[11px] h-[11px] bg-[#161b22] border border-[#30363d] rounded-sm" />
+            <div className="w-[11px] h-[11px] bg-[#0e4429] border border-[#0e4429] rounded-sm" />
+            <div className="w-[11px] h-[11px] bg-[#006d32] border border-[#006d32] rounded-sm" />
+            <div className="w-[11px] h-[11px] bg-[#26a641] border border-[#26a641] rounded-sm" />
+            <div className="w-[11px] h-[11px] bg-[#39d353] border border-[#39d353] rounded-sm" />
           </div>
           <span>More</span>
         </div>
@@ -282,19 +279,12 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
             top: mousePosition.y + 10,
           }}
         >
-          <div className="bg-slate-900 border border-white/20 rounded-lg p-3 shadow-2xl text-sm">
-            <p className="font-semibold text-white mb-1">
-              {format(hoveredDay.date, 'MMM d, yyyy')}
+          <div className="bg-[#1c2128] border border-[#30363d] rounded-md px-2 py-1.5 shadow-2xl text-xs">
+            <p className="text-gray-300 font-medium">
+              {hoveredDay.total === 0
+                ? `No activities on ${format(hoveredDay.date, 'MMM d, yyyy')}`
+                : `${hoveredDay.total} ${hoveredDay.total === 1 ? 'activity' : 'activities'} on ${format(hoveredDay.date, 'MMM d, yyyy')}`}
             </p>
-            <p className="text-gray-300">
-              {hoveredDay.total === 0 ? 'No activity' : `${hoveredDay.total} activities`}
-            </p>
-            {hoveredDay.total > 0 && (
-              <div className="mt-1 text-xs text-gray-400">
-                {hoveredDay.quizCount > 0 && <div>{hoveredDay.quizCount} quiz{hoveredDay.quizCount !== 1 ? 'zes' : ''}</div>}
-                {hoveredDay.uploadCount > 0 && <div>{hoveredDay.uploadCount} upload{hoveredDay.uploadCount !== 1 ? 's' : ''}</div>}
-              </div>
-            )}
           </div>
         </div>
       )}
