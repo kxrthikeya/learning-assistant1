@@ -87,7 +87,7 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
 
     const weeksArray: (Activity | null)[][] = [];
     const monthLabelsArray: Array<{ month: string; offset: number }> = [];
-    let currentMonth = '';
+    let currentMonth = -1;
 
     let currentWeek: (Activity | null)[] = new Array(dayOfWeek).fill(null);
 
@@ -97,21 +97,24 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
       const dayOfWeek = getDay(date);
 
       if (dayOfWeek === 0 && currentWeek.length > 0) {
-        while (currentWeek.length < 7) {
-          currentWeek.push(null);
-        }
         weeksArray.push(currentWeek);
         currentWeek = [];
       }
 
       currentWeek.push(activity);
 
-      const monthName = format(date, 'MMM');
-      if (monthName !== currentMonth) {
-        if (dayOfWeek === 0 || index === 0) {
-          monthLabelsArray.push({ month: monthName, offset: weeksArray.length });
+      const monthNumber = date.getMonth();
+      if (monthNumber !== currentMonth && weeksArray.length + (currentWeek.length > 0 ? 1 : 0) > 0) {
+        const weekOffset = currentWeek.length > 0 ? weeksArray.length : weeksArray.length;
+        const lastLabelOffset = monthLabelsArray.length > 0 ? monthLabelsArray[monthLabelsArray.length - 1].offset : -2;
+
+        if (weekOffset - lastLabelOffset >= 2) {
+          monthLabelsArray.push({
+            month: format(date, 'MMM'),
+            offset: weekOffset
+          });
         }
-        currentMonth = monthName;
+        currentMonth = monthNumber;
       }
     });
 
@@ -206,13 +209,13 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
 
       <div className="overflow-x-auto pb-2">
         <div className="inline-block min-w-full">
-          <div className="flex gap-1 mb-2 pl-[26px]">
+          <div className="flex gap-[3px] mb-2 pl-[26px]">
             {monthLabels.map((label, idx) => (
               <div
                 key={idx}
                 className="text-xs text-gray-500"
                 style={{
-                  marginLeft: idx === 0 ? 0 : `${(label.offset - (monthLabels[idx - 1]?.offset || 0)) * 12}px`
+                  marginLeft: idx === 0 ? 0 : `${(label.offset - (monthLabels[idx - 1]?.offset || 0)) * 14}px`
                 }}
               >
                 {label.month}
@@ -220,8 +223,8 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
             ))}
           </div>
 
-          <div className="flex gap-1">
-            <div className="flex flex-col gap-1 text-xs text-gray-500 pr-1 justify-around">
+          <div className="flex gap-[3px]">
+            <div className="flex flex-col gap-[3px] text-xs text-gray-500 pr-1.5 justify-around">
               <div className="h-[11px] leading-[11px]">{dayLabels[1]}</div>
               <div className="h-[11px]"></div>
               <div className="h-[11px] leading-[11px]">{dayLabels[3]}</div>
@@ -230,9 +233,9 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
               <div className="h-[11px]"></div>
             </div>
 
-            <div className="flex gap-1">
+            <div className="flex gap-[3px]">
               {weeks.map((week, weekIndex) => (
-                <div key={weekIndex} className="flex flex-col gap-1">
+                <div key={weekIndex} className="flex flex-col gap-[3px]">
                   {week.map((activity, dayIndex) => {
                     if (!activity) {
                       return <div key={`${weekIndex}-${dayIndex}`} className="w-[11px] h-[11px]" />;
@@ -240,7 +243,7 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
                     return (
                       <div
                         key={`${weekIndex}-${dayIndex}`}
-                        className={`w-[11px] h-[11px] rounded-sm transition-all duration-150 cursor-pointer ${getColorClass(activity.total)}`}
+                        className={`w-[11px] h-[11px] rounded-[2px] transition-all duration-150 cursor-pointer ${getColorClass(activity.total)}`}
                         onMouseEnter={(e) => handleMouseEnter(activity, e)}
                         onMouseLeave={() => setHoveredDay(null)}
                         onClick={() => setSelectedDay(activity)}
@@ -257,12 +260,12 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
       <div className="flex flex-wrap items-center justify-between gap-4 text-xs text-gray-500 mt-4 pt-4 border-t border-white/5">
         <div className="flex items-center gap-2">
           <span>Less</span>
-          <div className="flex gap-1">
-            <div className="w-[11px] h-[11px] bg-[#161b22] border border-[#30363d] rounded-sm" />
-            <div className="w-[11px] h-[11px] bg-[#0e4429] border border-[#0e4429] rounded-sm" />
-            <div className="w-[11px] h-[11px] bg-[#006d32] border border-[#006d32] rounded-sm" />
-            <div className="w-[11px] h-[11px] bg-[#26a641] border border-[#26a641] rounded-sm" />
-            <div className="w-[11px] h-[11px] bg-[#39d353] border border-[#39d353] rounded-sm" />
+          <div className="flex gap-[3px]">
+            <div className="w-[11px] h-[11px] bg-[#161b22] border border-[#30363d] rounded-[2px]" />
+            <div className="w-[11px] h-[11px] bg-[#0e4429] border border-[#0e4429] rounded-[2px]" />
+            <div className="w-[11px] h-[11px] bg-[#006d32] border border-[#006d32] rounded-[2px]" />
+            <div className="w-[11px] h-[11px] bg-[#26a641] border border-[#26a641] rounded-[2px]" />
+            <div className="w-[11px] h-[11px] bg-[#39d353] border border-[#39d353] rounded-[2px]" />
           </div>
           <span>More</span>
         </div>
