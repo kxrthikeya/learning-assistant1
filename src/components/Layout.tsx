@@ -84,11 +84,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <header className="border-b border-white/5 sticky top-0 z-30 backdrop-blur-xl bg-slate-950/80 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group ml-14">
-            <img
-              src="/image.png"
-              alt="EaseStudy Logo"
-              className="h-9 w-auto object-contain mix-blend-screen group-hover:scale-105 transition-transform duration-300"
-            />
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-lg shadow-cyan-500/30">
+                <BookOpen className="w-6 h-6 text-white" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs font-semibold text-cyan-400 tracking-wider">AI-POWERED</span>
+                <span className="text-xl font-bold text-white">EaseStudy</span>
+              </div>
+            </div>
           </Link>
           <div className="flex items-center gap-3">
             {user ? (
