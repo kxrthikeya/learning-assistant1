@@ -208,52 +208,62 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
       </div>
 
       <div className="overflow-x-auto pb-2">
-        <div className="inline-block min-w-full">
-          <div className="flex">
-            <div className="w-[26px] flex-shrink-0" />
-            <div className="flex gap-[3px] mb-2">
-              {weeks.map((week, weekIndex) => {
-                const monthLabel = monthLabels.find(m => m.offset === weekIndex);
+        <div
+          className="inline-grid gap-[3px]"
+          style={{
+            gridTemplateColumns: `auto repeat(${weeks.length}, 13px)`,
+            gridTemplateRows: 'auto repeat(7, 13px)'
+          }}
+        >
+          <div />
+          {weeks.map((week, weekIndex) => {
+            const monthLabel = monthLabels.find(m => m.offset === weekIndex);
+            return (
+              <div
+                key={`month-${weekIndex}`}
+                className="text-xs text-gray-500 text-left"
+                style={{ gridColumn: weekIndex + 2 }}
+              >
+                {monthLabel ? monthLabel.month : ''}
+              </div>
+            );
+          })}
+
+          {[0, 1, 2, 3, 4, 5, 6].map((dayIndex) => (
+            <div key={`day-label-${dayIndex}`} className="text-xs text-gray-500 flex items-center pr-2" style={{ gridRow: dayIndex + 2 }}>
+              {dayIndex === 1 ? dayLabels[1] : dayIndex === 3 ? dayLabels[3] : dayIndex === 5 ? dayLabels[5] : ''}
+            </div>
+          ))}
+
+          {weeks.map((week, weekIndex) => (
+            week.map((activity, dayIndex) => {
+              if (!activity) {
                 return (
-                  <div key={weekIndex} className="w-[11px] text-xs text-gray-500">
-                    {monthLabel ? monthLabel.month : ''}
-                  </div>
+                  <div
+                    key={`${weekIndex}-${dayIndex}`}
+                    style={{
+                      gridColumn: weekIndex + 2,
+                      gridRow: dayIndex + 2
+                    }}
+                    className="w-[13px] h-[13px]"
+                  />
                 );
-              })}
-            </div>
-          </div>
-
-          <div className="flex gap-[3px]">
-            <div className="flex flex-col gap-[3px] text-xs text-gray-500 pr-1.5 justify-around">
-              <div className="h-[11px] leading-[11px]">{dayLabels[1]}</div>
-              <div className="h-[11px]"></div>
-              <div className="h-[11px] leading-[11px]">{dayLabels[3]}</div>
-              <div className="h-[11px]"></div>
-              <div className="h-[11px] leading-[11px]">{dayLabels[5]}</div>
-              <div className="h-[11px]"></div>
-            </div>
-
-            <div className="flex gap-[3px]">
-              {weeks.map((week, weekIndex) => (
-                <div key={weekIndex} className="flex flex-col gap-[3px]">
-                  {week.map((activity, dayIndex) => {
-                    if (!activity) {
-                      return <div key={`${weekIndex}-${dayIndex}`} className="w-[11px] h-[11px]" />;
-                    }
-                    return (
-                      <div
-                        key={`${weekIndex}-${dayIndex}`}
-                        className={`w-[11px] h-[11px] rounded-[2px] transition-all duration-150 cursor-pointer ${getColorClass(activity.total)}`}
-                        onMouseEnter={(e) => handleMouseEnter(activity, e)}
-                        onMouseLeave={() => setHoveredDay(null)}
-                        onClick={() => setSelectedDay(activity)}
-                      />
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-          </div>
+              }
+              return (
+                <div
+                  key={`${weekIndex}-${dayIndex}`}
+                  style={{
+                    gridColumn: weekIndex + 2,
+                    gridRow: dayIndex + 2
+                  }}
+                  className={`w-[13px] h-[13px] rounded-[2px] transition-all duration-150 cursor-pointer ${getColorClass(activity.total)}`}
+                  onMouseEnter={(e) => handleMouseEnter(activity, e)}
+                  onMouseLeave={() => setHoveredDay(null)}
+                  onClick={() => setSelectedDay(activity)}
+                />
+              );
+            })
+          ))}
         </div>
       </div>
 
@@ -261,11 +271,11 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
         <div className="flex items-center gap-2">
           <span>Less</span>
           <div className="flex gap-[3px]">
-            <div className="w-[11px] h-[11px] bg-[#161b22] border border-[#30363d] rounded-[2px]" />
-            <div className="w-[11px] h-[11px] bg-[#0e4429] border border-[#0e4429] rounded-[2px]" />
-            <div className="w-[11px] h-[11px] bg-[#006d32] border border-[#006d32] rounded-[2px]" />
-            <div className="w-[11px] h-[11px] bg-[#26a641] border border-[#26a641] rounded-[2px]" />
-            <div className="w-[11px] h-[11px] bg-[#39d353] border border-[#39d353] rounded-[2px]" />
+            <div className="w-[13px] h-[13px] bg-[#161b22] border border-[#30363d] rounded-[2px]" />
+            <div className="w-[13px] h-[13px] bg-[#0e4429] border border-[#0e4429] rounded-[2px]" />
+            <div className="w-[13px] h-[13px] bg-[#006d32] border border-[#006d32] rounded-[2px]" />
+            <div className="w-[13px] h-[13px] bg-[#26a641] border border-[#26a641] rounded-[2px]" />
+            <div className="w-[13px] h-[13px] bg-[#39d353] border border-[#39d353] rounded-[2px]" />
           </div>
           <span>More</span>
         </div>
