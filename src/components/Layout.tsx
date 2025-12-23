@@ -49,7 +49,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               </div>
               <div className="hidden sm:flex flex-col">
                 <span className="text-xs font-semibold text-cyan-400 tracking-wider">AI-POWERED</span>
-                <span className="text-lg font-bold text-white">EaseStudy</span>
+                <span className="text-lg font-bold text-white">EasyStudy</span>
               </div>
             </div>
           </Link>
