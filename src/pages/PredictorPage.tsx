@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Upload, FileText, X, Loader2, Sparkles, Download, AlertTriangle, TrendingUp, Repeat, Target } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
 import { Button } from '../components/Button';
+import { SkeletonLoader } from '../components/SkeletonLoader';
 import { useAuthStore } from '../store/auth-store';
 import { extractTextFromFile, analyzePapersAndSyllabus, generatePredictedPaper } from '../lib/ai-service';
 import { useToast } from '../hooks/useToast';
@@ -145,13 +146,37 @@ export function PredictorPage() {
           <div className="flex items-center gap-2"><label className="text-sm text-slate-400">Questions:</label><input type="number" min={5} max={50} value={totalQuestions} onChange={(e) => setTotalQuestions(Math.min(50, Math.max(5, parseInt(e.target.value) || 20)))} className="w-20 bg-slate-900/50 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50" disabled={analyzing} /></div>
           <Button onClick={handleAnalyze} loading={analyzing}><Sparkles className="w-4 h-4" />Analyze Patterns</Button>
         </div>
-        {(patterns || generatedPaper) && (
+{analyzing && (
+          <div className="border-t border-white/10 pt-6">
+            <div className="flex items-center gap-3 mb-6">
+              <Loader2 className="w-5 h-5 text-cyan-400 animate-spin" />
+              <div>
+                <h4 className="text-lg font-semibold text-white">Analyzing patterns...</h4>
+                <p className="text-sm text-slate-400">Processing syllabus and past papers with AI</p>
+              </div>
+            </div>
+            <SkeletonLoader variant="grid" count={2} />
+          </div>
+        )}
+        {(patterns || generatedPaper) && !analyzing && (
           <div className="border-t border-white/10 pt-6">
             <div className="flex gap-2 mb-4">
               <button onClick={() => setActiveTab('patterns')} className={`px-4 py-2 rounded-lg text-sm transition ${activeTab === 'patterns' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-white/5 text-slate-400 hover:text-white'}`}><TrendingUp className="w-4 h-4 inline mr-2" />Topic Analysis</button>
               <button onClick={() => setActiveTab('paper')} className={`px-4 py-2 rounded-lg text-sm transition ${activeTab === 'paper' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-white/5 text-slate-400 hover:text-white'}`} disabled={!generatedPaper}><Target className="w-4 h-4 inline mr-2" />Predicted Paper</button>
             </div>
-            {activeTab === 'patterns' && patterns && <PatternAnalysis patterns={patterns} onGenerate={handleGenerate} generating={generating} />}
+            {activeTab === 'patterns' && patterns && !generating && <PatternAnalysis patterns={patterns} onGenerate={handleGenerate} generating={generating} />}
+            {activeTab === 'patterns' && generating && (
+              <div>
+                <div className="flex items-center gap-3 mb-6">
+                  <Loader2 className="w-5 h-5 text-cyan-400 animate-spin" />
+                  <div>
+                    <h4 className="text-lg font-semibold text-white">Generating predicted paper...</h4>
+                    <p className="text-sm text-slate-400">Creating questions based on analysis</p>
+                  </div>
+                </div>
+                <SkeletonLoader variant="card" count={5} />
+              </div>
+            )}
             {activeTab === 'paper' && generatedPaper && <PredictedPaperView paper={generatedPaper} examName={examName} onDownload={handleDownload} />}
           </div>
         )}

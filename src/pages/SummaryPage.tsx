@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, Trash2, ArrowRight, FileText } from 'lucide-react';
+import { RefreshCw, Trash2, ArrowRight, FileText, Loader2 } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
 import { Button } from '../components/Button';
+import { SkeletonLoader } from '../components/SkeletonLoader';
 import { useAuthStore } from '../store/auth-store';
 import { useAppStore } from '../store/app-store';
 import { summarizeText } from '../lib/ai-service';
@@ -66,7 +67,22 @@ export function SummaryPage() {
             )}
           </div>
           <div className="bg-slate-900/50 border border-white/10 rounded-2xl p-5 min-h-[400px]">
-            {selectedNote?.summary ? <pre className="text-sm text-slate-200 whitespace-pre-wrap font-sans leading-relaxed">{selectedNote.summary}</pre> : <p className="text-slate-400 text-sm">{notes.length === 0 ? 'Upload notes to generate a summary.' : 'Select a note from the list.'}</p>}
+            {regenerating ? (
+              <div>
+                <div className="flex items-center gap-3 mb-6">
+                  <Loader2 className="w-5 h-5 text-cyan-400 animate-spin" />
+                  <div>
+                    <p className="text-white font-medium">Generating summary...</p>
+                    <p className="text-sm text-slate-400">AI is analyzing your notes</p>
+                  </div>
+                </div>
+                <SkeletonLoader variant="paragraph" count={3} />
+              </div>
+            ) : selectedNote?.summary ? (
+              <pre className="text-sm text-slate-200 whitespace-pre-wrap font-sans leading-relaxed">{selectedNote.summary}</pre>
+            ) : (
+              <p className="text-slate-400 text-sm">{notes.length === 0 ? 'Upload notes to generate a summary.' : 'Select a note from the list.'}</p>
+            )}
           </div>
           {selectedNote?.summary && (
             <div className="mt-4 flex gap-3">

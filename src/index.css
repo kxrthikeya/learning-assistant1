@@ -139,3 +139,25 @@ input[type="number"]::-webkit-outer-spin-button {
 .animate-slide-in {
   animation: slide-in 0.3s ease-out;
 }
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.shimmer-effect {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(34, 211, 238, 0.15) 20%,
+    rgba(34, 211, 238, 0.3) 50%,
+    rgba(34, 211, 238, 0.15) 80%,
+    transparent 100%
+  );
+  animation: shimmer 2s ease-in-out infinite;
+  pointer-events: none;
+}
