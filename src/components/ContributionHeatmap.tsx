@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { subDays, format, startOfDay, isSameDay, getDay, startOfWeek, addDays } from 'date-fns';
-import { X } from 'lucide-react';
+import { subDays, format, startOfDay, isSameDay, getDay, startOfWeek, addDays, getYear, subYears, startOfYear, endOfYear } from 'date-fns';
+import { X, ChevronDown } from 'lucide-react';
 import { GlassCard } from './GlassCard';
 import { Button } from './Button';
 
@@ -21,10 +21,41 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
   const [hoveredDay, setHoveredDay] = useState<Activity | null>(null);
   const [selectedDay, setSelectedDay] = useState<Activity | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [selectedYear, setSelectedYear] = useState<number>(getYear(new Date()));
+  const [showYearDropdown, setShowYearDropdown] = useState(false);
+
+  const availableYears = useMemo(() => {
+    const currentYear = getYear(new Date());
+    const years: number[] = [];
+
+    const oldestDate = [...quizAttempts, ...uploads]
+      .map(item => new Date(item.created_at))
+      .sort((a, b) => a.getTime() - b.getTime())[0];
+
+    const startYear = oldestDate ? getYear(oldestDate) : currentYear;
+
+    for (let year = currentYear; year >= startYear; year--) {
+      years.push(year);
+    }
+
+    return years.length > 0 ? years : [currentYear];
+  }, [quizAttempts, uploads]);
 
   const { activityData, weeks, monthLabels, totalActivities } = useMemo(() => {
-    const today = startOfDay(new Date());
-    const startDate = subDays(today, 364);
+    const currentYear = getYear(new Date());
+    const isCurrentYear = selectedYear === currentYear;
+
+    let endDate: Date;
+    let startDate: Date;
+
+    if (isCurrentYear) {
+      endDate = startOfDay(new Date());
+      startDate = subDays(endDate, 364);
+    } else {
+      startDate = startOfYear(new Date(selectedYear, 0, 1));
+      endDate = endOfYear(new Date(selectedYear, 11, 31));
+    }
+
     const firstDay = startOfWeek(startDate, { weekStartsOn: 0 });
 
     const activityMap = new Map<string, Activity>();
@@ -83,14 +114,16 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
       monthLabels: monthLabelsArray,
       totalActivities: totalAct
     };
-  }, [quizAttempts, uploads]);
+  }, [quizAttempts, uploads, selectedYear]);
 
   const getColorClass = (total: number) => {
-    if (total === 0) return 'bg-slate-700/50 hover:bg-slate-700';
-    if (total <= 2) return 'bg-green-600 hover:bg-green-500';
-    if (total <= 5) return 'bg-green-500 hover:bg-green-400';
-    if (total <= 7) return 'bg-green-400 hover:bg-green-300';
-    return 'bg-cyan-500 hover:bg-cyan-400';
+    if (total === 0) return 'bg-slate-800/50 hover:bg-slate-800';
+    if (total === 1) return 'bg-red-500/80 hover:bg-red-500';
+    if (total === 2) return 'bg-orange-500/80 hover:bg-orange-500';
+    if (total <= 4) return 'bg-yellow-500/80 hover:bg-yellow-500';
+    if (total <= 6) return 'bg-lime-500/80 hover:bg-lime-500';
+    if (total <= 8) return 'bg-green-500/80 hover:bg-green-500';
+    return 'bg-emerald-500 hover:bg-emerald-400';
   };
 
   const handleMouseEnter = (activity: Activity, event: React.MouseEvent) => {
@@ -103,11 +136,42 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
   return (
     <GlassCard className="p-6 border-white/10">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
-        <div>
-          <h2 className="text-2xl font-bold text-white mb-1">Your Learning Activity</h2>
-          <p className="text-gray-400 text-sm">
-            {totalActivities} activities in the last year
-            {currentStreak > 0 && <span className="text-green-400 ml-2">• {currentStreak} day streak</span>}
+        <div className="flex-1">
+          <div className="flex items-center gap-4 flex-wrap">
+            <h2 className="text-2xl font-bold text-white">Your Learning Activity</h2>
+            <div className="relative">
+              <button
+                onClick={() => setShowYearDropdown(!showYearDropdown)}
+                className="flex items-center gap-2 px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700/80 border border-white/10 rounded-lg text-sm text-white transition-colors"
+              >
+                <span>{selectedYear}</span>
+                <ChevronDown className="w-4 h-4" />
+              </button>
+              {showYearDropdown && (
+                <div className="absolute top-full left-0 mt-2 bg-slate-800 border border-white/20 rounded-lg shadow-2xl overflow-hidden z-50 min-w-[120px]">
+                  {availableYears.map((year) => (
+                    <button
+                      key={year}
+                      onClick={() => {
+                        setSelectedYear(year);
+                        setShowYearDropdown(false);
+                      }}
+                      className={`w-full px-4 py-2 text-left text-sm hover:bg-slate-700 transition-colors ${
+                        selectedYear === year ? 'text-cyan-400 bg-slate-700/50' : 'text-white'
+                      }`}
+                    >
+                      {year}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+          <p className="text-gray-400 text-sm mt-2">
+            {totalActivities} activities in {selectedYear}
+            {currentStreak > 0 && selectedYear === getYear(new Date()) && (
+              <span className="text-green-400 ml-2">• {currentStreak} day streak</span>
+            )}
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -174,11 +238,13 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
         <div className="flex items-center gap-2">
           <span>Less</span>
           <div className="flex gap-1">
-            <div className="w-3 h-3 bg-slate-700/50 rounded-sm" title="No activity" />
-            <div className="w-3 h-3 bg-green-600 rounded-sm" title="1-2 activities" />
-            <div className="w-3 h-3 bg-green-500 rounded-sm" title="3-5 activities" />
-            <div className="w-3 h-3 bg-green-400 rounded-sm" title="6-7 activities" />
-            <div className="w-3 h-3 bg-cyan-500 rounded-sm" title="8+ activities" />
+            <div className="w-3 h-3 bg-slate-800/50 rounded-sm" title="No activity" />
+            <div className="w-3 h-3 bg-red-500/80 rounded-sm" title="1 activity" />
+            <div className="w-3 h-3 bg-orange-500/80 rounded-sm" title="2 activities" />
+            <div className="w-3 h-3 bg-yellow-500/80 rounded-sm" title="3-4 activities" />
+            <div className="w-3 h-3 bg-lime-500/80 rounded-sm" title="5-6 activities" />
+            <div className="w-3 h-3 bg-green-500/80 rounded-sm" title="7-8 activities" />
+            <div className="w-3 h-3 bg-emerald-500 rounded-sm" title="9+ activities" />
           </div>
           <span>More</span>
         </div>
