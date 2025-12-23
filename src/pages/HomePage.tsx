@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Upload, FileText, Brain, ArrowRight } from 'lucide-react';
+import { Upload, FileText, Brain, ArrowRight, TrendingUp, Network, RotateCw, AlertCircle, Route, Users } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
 import { StatCard } from '../components/StatCard';
 import { Button } from '../components/Button';
@@ -42,10 +42,13 @@ export function HomePage() {
 
   const streak = calculateStreak();
   const latestSummary = notes[0]?.summary || 'No summary yet. Upload your notes to begin.';
-  const steps = [
-    { step: 1, title: 'Upload Notes', description: 'Upload up to 5 files or paste text to get started', icon: Upload, to: '/upload' },
-    { step: 2, title: 'AI Summary', description: 'Get concise, structured summaries of your notes', icon: FileText, to: '/summary' },
-    { step: 3, title: 'Practice Quiz', description: 'Generate MCQs by difficulty and test your knowledge', icon: Brain, to: '/quiz' },
+  const advancedFeatures = [
+    { title: 'Exam Prediction', description: 'AI analyzes patterns to predict likely exam questions and topics', icon: TrendingUp, to: '/predictor', gradient: 'from-cyan-500/20 to-blue-500/20' },
+    { title: 'Concept Mapping', description: 'Visualize relationships between topics with interactive concept maps', icon: Network, to: '/concept-map', gradient: 'from-blue-500/20 to-purple-500/20' },
+    { title: 'SRS Flashcards', description: 'Spaced repetition system optimizes review timing for long-term retention', icon: RotateCw, to: '/flashcards', gradient: 'from-purple-500/20 to-pink-500/20' },
+    { title: 'Weakness Detection', description: 'Identify knowledge gaps and get targeted practice recommendations', icon: AlertCircle, to: '/weakness', gradient: 'from-pink-500/20 to-rose-500/20' },
+    { title: 'Study Path', description: 'Personalized learning roadmap based on your performance and goals', icon: Route, to: '/study-path', gradient: 'from-rose-500/20 to-orange-500/20' },
+    { title: 'Community Tips', description: 'Proven study strategies and insights from top-performing students', icon: Users, to: '/tips', gradient: 'from-orange-500/20 to-cyan-500/20' },
   ];
 
   return (
@@ -60,7 +63,7 @@ export function HomePage() {
             <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight">
               Your AI-Powered <span className="text-gradient">Study Companion</span>
             </h2>
-            <p className="text-slate-300 text-lg leading-relaxed">Transform your notes into structured summaries, practice with AI-generated quizzes, track your performance, and stay focused with built-in study tools.</p>
+            <p className="text-slate-300 text-lg leading-relaxed">Engineered for engineering students. Master complex concepts, predict exam patterns, identify knowledge gaps, and optimize your study strategy with AI-powered insights.</p>
             <div className="flex flex-wrap gap-4 pt-2">
               <Link to={user ? '/upload' : '/auth'}><Button variant="gradient" size="lg">Get Started<ArrowRight className="w-5 h-5" /></Button></Link>
               <Link to="/dashboard"><Button variant="secondary" size="lg">View Dashboard</Button></Link>
@@ -80,22 +83,27 @@ export function HomePage() {
           </div>
         </div>
       </GlassCard>
-      <div className="grid md:grid-cols-3 gap-6">
-        {steps.map((item) => {
-          const Icon = item.icon;
-          return (
-            <Link key={item.step} to={item.to}>
-              <GlassCard hover gradient="blue" className="p-6 h-full group">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="px-3 py-1 text-xs font-semibold text-cyan-300 bg-cyan-500/10 rounded-full border border-cyan-500/20">Step {item.step}</span>
-                  <Icon className="w-6 h-6 text-cyan-400 group-hover:scale-110 transition-transform duration-300" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors">{item.title}</h3>
-                <p className="text-slate-300 text-sm leading-relaxed">{item.description}</p>
-              </GlassCard>
-            </Link>
-          );
-        })}
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <h3 className="text-2xl font-bold text-white">Advanced Features</h3>
+          <div className="h-px flex-1 bg-gradient-to-r from-cyan-500/50 to-transparent"></div>
+        </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {advancedFeatures.map((feature) => {
+            const Icon = feature.icon;
+            return (
+              <Link key={feature.title} to={feature.to}>
+                <GlassCard hover gradient="blue" className="p-6 h-full group">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    <Icon className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors">{feature.title}</h3>
+                  <p className="text-slate-300 text-sm leading-relaxed">{feature.description}</p>
+                </GlassCard>
+              </Link>
+            );
+          })}
+        </div>
       </div>
       {user && totalStudyMinutes > 0 && (
         <GlassCard gradient="emerald" className="p-6 md:p-8">
@@ -113,6 +121,32 @@ export function HomePage() {
           </div>
         </GlassCard>
       )}
+      <GlassCard gradient="slate" className="p-8 text-center">
+        <h3 className="text-2xl font-bold text-white mb-6">Built for Performance</h3>
+        <div className="flex flex-wrap justify-center items-center gap-8">
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center">
+              <span className="text-2xl font-bold text-cyan-400">⚛️</span>
+            </div>
+            <p className="text-white font-semibold">React</p>
+            <p className="text-slate-400 text-xs">UI Framework</p>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center">
+              <span className="text-2xl font-bold text-emerald-400">🤖</span>
+            </div>
+            <p className="text-white font-semibold">OpenAI</p>
+            <p className="text-slate-400 text-xs">AI Engine</p>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30 flex items-center justify-center">
+              <span className="text-2xl font-bold text-green-400">⚡</span>
+            </div>
+            <p className="text-white font-semibold">Supabase</p>
+            <p className="text-slate-400 text-xs">Database & Auth</p>
+          </div>
+        </div>
+      </GlassCard>
     </div>
   );
 }
