@@ -1,4 +1,5 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { GoogleGenerativeAI } from "npm:@google/generative-ai@0.21.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -16,10 +17,10 @@ Deno.serve(async (req: Request) => {
 
   try {
     const { fileData, mimeType, fileName } = await req.json();
-    const openaiKey = Deno.env.get('OPENAI_API_KEY');
+    const geminiKey = Deno.env.get('VITE_GEMINI_API_KEY');
 
-    if (!openaiKey) {
-      throw new Error('OpenAI API key not configured');
+    if (!geminiKey) {
+      throw new Error('Gemini API key not configured');
     }
 
     if (mimeType === 'text/plain') {
@@ -30,37 +31,21 @@ Deno.serve(async (req: Request) => {
     }
 
     if (mimeType === 'application/pdf' || mimeType.startsWith('image/')) {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${openaiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'gpt-4-vision',
-          messages: [
-            {
-              role: 'user',
-              content: [
-                {
-                  type: 'image_url',
-                  image_url: {
-                    url: `data:${mimeType};base64,${fileData}`,
-                  },
-                },
-                {
-                  type: 'text',
-                  text: 'Extract all text from this image/document. Preserve formatting and structure.',
-                },
-              ],
-            },
-          ],
-          max_tokens: 2000,
-        }),
-      });
+      const genAI = new GoogleGenerativeAI(geminiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-      const data = await response.json();
-      const text = data.choices[0]?.message?.content || '';
+      const imagePart = {
+        inlineData: {
+          data: fileData,
+          mimeType: mimeType,
+        },
+      };
+
+      const prompt = "Extract all text from this image/document. Preserve formatting and structure.";
+
+      const result = await model.generateContent([prompt, imagePart]);
+      const response = await result.response;
+      const text = response.text() || '';
 
       return new Response(JSON.stringify({ text }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

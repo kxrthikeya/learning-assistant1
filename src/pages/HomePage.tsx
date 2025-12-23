@@ -135,7 +135,7 @@ export function HomePage() {
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center">
               <span className="text-2xl font-bold text-emerald-400">🤖</span>
             </div>
-            <p className="text-white font-semibold">OpenAI</p>
+            <p className="text-white font-semibold">Gemini AI</p>
             <p className="text-slate-400 text-xs">AI Engine</p>
           </div>
           <div className="flex flex-col items-center gap-2">

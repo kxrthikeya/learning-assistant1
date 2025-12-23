@@ -1,4 +1,5 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { GoogleGenerativeAI } from "npm:@google/generative-ai@0.21.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -16,10 +17,10 @@ Deno.serve(async (req: Request) => {
 
   try {
     const { summary, difficulty, count } = await req.json();
-    const openaiKey = Deno.env.get('OPENAI_API_KEY');
+    const geminiKey = Deno.env.get('VITE_GEMINI_API_KEY');
 
-    if (!openaiKey) {
-      throw new Error('OpenAI API key not configured');
+    if (!geminiKey) {
+      throw new Error('Gemini API key not configured');
     }
 
     const difficultyGuidance = {
@@ -28,35 +29,19 @@ Deno.serve(async (req: Request) => {
       hard: 'Create challenging questions that require deep analysis and synthesis of concepts.',
     };
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openaiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4-turbo',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are an expert educational content creator. Generate quiz questions as a JSON array with "question", "options" (array of 4), and "correctIndex" (0-3) fields.',
-          },
-          {
-            role: 'user',
-            content: `${difficultyGuidance[difficulty]} Generate ${count} multiple choice questions from this content:\n\n${summary}\n\nReturn as JSON array only, no other text.`,
-          },
-        ],
-        temperature: 0.7,
-        max_tokens: 1500,
-      }),
-    });
+    const genAI = new GoogleGenerativeAI(geminiKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const data = await response.json();
-    const content = data.choices[0]?.message?.content || '[]';
-    
+    const prompt = `You are an expert educational content creator. Generate quiz questions as a JSON array with "question", "options" (array of 4), and "correctIndex" (0-3) fields.\n\n${difficultyGuidance[difficulty]} Generate ${count} multiple choice questions from this content:\n\n${summary}\n\nReturn as JSON array only, no other text.`;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const content = response.text() || '[]';
+
     let questions = [];
     try {
-      questions = JSON.parse(content);
+      const cleanContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      questions = JSON.parse(cleanContent);
     } catch {
       questions = [];
     }

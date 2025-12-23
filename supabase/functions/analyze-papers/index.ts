@@ -1,4 +1,5 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { GoogleGenerativeAI } from "npm:@google/generative-ai@0.21.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -16,41 +17,25 @@ Deno.serve(async (req: Request) => {
 
   try {
     const { syllabusText, paperTexts } = await req.json();
-    const openaiKey = Deno.env.get('OPENAI_API_KEY');
+    const geminiKey = Deno.env.get('VITE_GEMINI_API_KEY');
 
-    if (!openaiKey) {
-      throw new Error('OpenAI API key not configured');
+    if (!geminiKey) {
+      throw new Error('Gemini API key not configured');
     }
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openaiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4-turbo',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are an expert exam analyzer. Analyze past papers and syllabus to identify patterns. Return JSON with "topics" array (each with name, frequency, totalMarks, yearsAppeared) and "repeatedQuestions" array.',
-          },
-          {
-            role: 'user',
-            content: `Analyze this syllabus and past papers to identify patterns:\n\nSyllabus:\n${syllabusText}\n\nPast Papers:\n${paperTexts.join('\n---\n')}\n\nReturn JSON only.`,
-          },
-        ],
-        temperature: 0.7,
-        max_tokens: 2000,
-      }),
-    });
+    const genAI = new GoogleGenerativeAI(geminiKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const data = await response.json();
-    const content = data.choices[0]?.message?.content || '{}';
-    
+    const prompt = `You are an expert exam analyzer. Analyze past papers and syllabus to identify patterns. Return JSON with "topics" array (each with name, frequency, totalMarks, yearsAppeared) and "repeatedQuestions" array.\n\nAnalyze this syllabus and past papers to identify patterns:\n\nSyllabus:\n${syllabusText}\n\nPast Papers:\n${paperTexts.join('\n---\n')}\n\nReturn JSON only.`;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const content = response.text() || '{}';
+
     let patterns = { topics: [], repeatedQuestions: [] };
     try {
-      patterns = JSON.parse(content);
+      const cleanContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      patterns = JSON.parse(cleanContent);
     } catch {
       patterns = { topics: [], repeatedQuestions: [] };
     }
