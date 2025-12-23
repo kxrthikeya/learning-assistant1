@@ -90,18 +90,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
               className="h-12 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
             />
           </Link>
-          <nav className="hidden lg:flex gap-1.5 text-sm">
-            {navLinks.map((link) => {
-              const Icon = link.icon;
-              const isActive = location.pathname === link.to;
-              return (
-                <Link key={link.to} to={link.to} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all duration-200 ${isActive ? 'bg-white/10 text-white shadow-lg' : link.highlight ? 'text-emerald-300 hover:bg-emerald-500/10 hover:text-emerald-200' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}>
-                  <Icon className="w-4 h-4" />
-                  {link.label}
-                </Link>
-              );
-            })}
-          </nav>
           <div className="flex items-center gap-3">
             {user ? (
               <div className="hidden md:flex items-center gap-3">
