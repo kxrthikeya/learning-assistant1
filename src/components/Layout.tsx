@@ -85,7 +85,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group ml-14">
             <img
-              src="/logo.jpg"
+              src="/image.png"
               alt="EaseStudy Logo"
               className="h-9 w-auto object-contain mix-blend-screen group-hover:scale-105 transition-transform duration-300"
             />
