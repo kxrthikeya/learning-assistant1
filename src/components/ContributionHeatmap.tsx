@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { subDays, format, startOfDay, isSameDay, getDay, startOfWeek, addDays, getYear, subYears, startOfYear, endOfYear } from 'date-fns';
+import { subDays, format, startOfDay, isSameDay, getDay, startOfWeek, addDays, getYear, subYears, startOfYear, endOfYear, isLeapYear } from 'date-fns';
 import { X, ChevronDown } from 'lucide-react';
 import { GlassCard } from './GlassCard';
 import { Button } from './Button';
@@ -47,21 +47,25 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
 
     let endDate: Date;
     let startDate: Date;
+    let daysInYear: number;
 
     if (isCurrentYear) {
       endDate = startOfDay(new Date());
-      startDate = subDays(endDate, 364);
+      daysInYear = isLeapYear(new Date()) ? 366 : 365;
+      startDate = subDays(endDate, daysInYear - 1);
     } else {
-      startDate = startOfYear(new Date(selectedYear, 0, 1));
-      endDate = endOfYear(new Date(selectedYear, 11, 31));
+      const yearDate = new Date(selectedYear, 0, 1);
+      startDate = startOfYear(yearDate);
+      endDate = endOfYear(yearDate);
+      daysInYear = isLeapYear(yearDate) ? 366 : 365;
     }
 
-    const firstDay = startOfWeek(startDate, { weekStartsOn: 0 });
-
     const activityMap = new Map<string, Activity>();
+    const allDates: Date[] = [];
 
-    for (let i = 0; i < 371; i++) {
-      const date = addDays(firstDay, i);
+    for (let i = 0; i < daysInYear; i++) {
+      const date = addDays(startDate, i);
+      allDates.push(date);
       const dateKey = format(date, 'yyyy-MM-dd');
       const quizCount = quizAttempts.filter(a =>
         isSameDay(new Date(a.created_at), date)
@@ -78,32 +82,44 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
       });
     }
 
-    const weeksArray: Activity[][] = [];
+    const firstDate = allDates[0];
+    const dayOfWeek = getDay(firstDate);
+
+    const weeksArray: (Activity | null)[][] = [];
     const monthLabelsArray: Array<{ month: string; offset: number }> = [];
     let currentMonth = '';
 
-    for (let week = 0; week < 53; week++) {
-      const weekData: Activity[] = [];
-      for (let day = 0; day < 7; day++) {
-        const date = addDays(firstDay, week * 7 + day);
-        const dateKey = format(date, 'yyyy-MM-dd');
-        const activity = activityMap.get(dateKey) || {
-          date,
-          quizCount: 0,
-          uploadCount: 0,
-          total: 0
-        };
-        weekData.push(activity);
+    let currentWeek: (Activity | null)[] = new Array(dayOfWeek).fill(null);
 
-        if (day === 0) {
-          const monthName = format(date, 'MMM');
-          if (monthName !== currentMonth) {
-            monthLabelsArray.push({ month: monthName, offset: week });
-            currentMonth = monthName;
-          }
+    allDates.forEach((date, index) => {
+      const dateKey = format(date, 'yyyy-MM-dd');
+      const activity = activityMap.get(dateKey)!;
+      const dayOfWeek = getDay(date);
+
+      if (dayOfWeek === 0 && currentWeek.length > 0) {
+        while (currentWeek.length < 7) {
+          currentWeek.push(null);
         }
+        weeksArray.push(currentWeek);
+        currentWeek = [];
       }
-      weeksArray.push(weekData);
+
+      currentWeek.push(activity);
+
+      const monthName = format(date, 'MMM');
+      if (monthName !== currentMonth) {
+        if (dayOfWeek === 0 || index === 0) {
+          monthLabelsArray.push({ month: monthName, offset: weeksArray.length });
+        }
+        currentMonth = monthName;
+      }
+    });
+
+    if (currentWeek.length > 0) {
+      while (currentWeek.length < 7) {
+        currentWeek.push(null);
+      }
+      weeksArray.push(currentWeek);
     }
 
     const totalAct = Array.from(activityMap.values()).reduce((sum, act) => sum + act.total, 0);
@@ -123,7 +139,7 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
     if (total <= 4) return 'bg-yellow-500/80 hover:bg-yellow-500';
     if (total <= 6) return 'bg-lime-500/80 hover:bg-lime-500';
     if (total <= 8) return 'bg-green-500/80 hover:bg-green-500';
-    return 'bg-emerald-500 hover:bg-emerald-400';
+    return 'bg-green-600 hover:bg-green-500';
   };
 
   const handleMouseEnter = (activity: Activity, event: React.MouseEvent) => {
@@ -217,16 +233,21 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
             <div className="flex gap-1">
               {weeks.map((week, weekIndex) => (
                 <div key={weekIndex} className="flex flex-col gap-1">
-                  {week.map((activity, dayIndex) => (
-                    <div
-                      key={`${weekIndex}-${dayIndex}`}
-                      className={`w-3 h-3 rounded-sm transition-all duration-200 cursor-pointer ${getColorClass(activity.total)}`}
-                      onMouseEnter={(e) => handleMouseEnter(activity, e)}
-                      onMouseLeave={() => setHoveredDay(null)}
-                      onClick={() => setSelectedDay(activity)}
-                      title={`${format(activity.date, 'MMM d, yyyy')}: ${activity.total} activities`}
-                    />
-                  ))}
+                  {week.map((activity, dayIndex) => {
+                    if (!activity) {
+                      return <div key={`${weekIndex}-${dayIndex}`} className="w-3 h-3" />;
+                    }
+                    return (
+                      <div
+                        key={`${weekIndex}-${dayIndex}`}
+                        className={`w-3 h-3 rounded-sm transition-all duration-200 cursor-pointer ${getColorClass(activity.total)}`}
+                        onMouseEnter={(e) => handleMouseEnter(activity, e)}
+                        onMouseLeave={() => setHoveredDay(null)}
+                        onClick={() => setSelectedDay(activity)}
+                        title={`${format(activity.date, 'MMM d, yyyy')}: ${activity.total} activities`}
+                      />
+                    );
+                  })}
                 </div>
               ))}
             </div>
@@ -244,7 +265,7 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
             <div className="w-3 h-3 bg-yellow-500/80 rounded-sm" title="3-4 activities" />
             <div className="w-3 h-3 bg-lime-500/80 rounded-sm" title="5-6 activities" />
             <div className="w-3 h-3 bg-green-500/80 rounded-sm" title="7-8 activities" />
-            <div className="w-3 h-3 bg-emerald-500 rounded-sm" title="9+ activities" />
+            <div className="w-3 h-3 bg-green-600 rounded-sm" title="9+ activities" />
           </div>
           <span>More</span>
         </div>
