@@ -23,11 +23,12 @@ async function sendChatMessage(message: string, history: Message[]) {
     }),
   });
 
-  if (!response.ok) {
-    throw new Error('Failed to send message');
+  const data = await response.json();
+
+  if (!response.ok || data.error) {
+    throw new Error(data.error || 'Failed to send message');
   }
 
-  const data = await response.json();
   return data.reply;
 }
 
@@ -85,9 +86,10 @@ export function FloatingChat() {
       };
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
+      const errorText = error instanceof Error ? error.message : 'Unknown error occurred';
       const errorMessage: Message = {
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.',
+        content: `Sorry, I encountered an error: ${errorText}. Please try again or check your connection.`,
         timestamp: new Date(),
       };
       setMessages(prev => [...prev, errorMessage]);

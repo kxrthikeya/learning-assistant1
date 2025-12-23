@@ -22,10 +22,15 @@ Deno.serve(async (req: Request) => {
 
   try {
     const { message, history } = await req.json() as { message: string; history?: Message[] };
+
+    if (!message || typeof message !== 'string') {
+      throw new Error('Invalid message format');
+    }
+
     const geminiKey = Deno.env.get('VITE_GEMINI_API_KEY');
 
     if (!geminiKey) {
-      throw new Error('Gemini API key not configured');
+      throw new Error('Gemini API key not configured. Please contact support.');
     }
 
     const genAI = new GoogleGenerativeAI(geminiKey);
@@ -62,8 +67,10 @@ Study Buddy:`;
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
+    console.error('Chat function error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to process chat request';
     return new Response(
-      JSON.stringify({ error: error.message || 'Failed to process chat request' }),
+      JSON.stringify({ error: errorMessage }),
       {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
