@@ -209,18 +209,18 @@ export function ContributionHeatmap({ quizAttempts, uploads, currentStreak }: Co
 
       <div className="overflow-x-auto pb-2">
         <div className="inline-block min-w-full">
-          <div className="flex gap-[3px] mb-2 pl-[26px]">
-            {monthLabels.map((label, idx) => (
-              <div
-                key={idx}
-                className="text-xs text-gray-500"
-                style={{
-                  marginLeft: idx === 0 ? 0 : `${(label.offset - (monthLabels[idx - 1]?.offset || 0)) * 14}px`
-                }}
-              >
-                {label.month}
-              </div>
-            ))}
+          <div className="flex">
+            <div className="w-[26px] flex-shrink-0" />
+            <div className="flex gap-[3px] mb-2">
+              {weeks.map((week, weekIndex) => {
+                const monthLabel = monthLabels.find(m => m.offset === weekIndex);
+                return (
+                  <div key={weekIndex} className="w-[11px] text-xs text-gray-500">
+                    {monthLabel ? monthLabel.month : ''}
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           <div className="flex gap-[3px]">
