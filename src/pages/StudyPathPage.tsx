@@ -40,15 +40,57 @@ export function StudyPathPage() {
   const checkAndLoadPath = async () => {
     setLoading(true);
     try {
-      const analysis = await analyzeUserWeaknesses(user!.id);
+      const { data: quizzes } = await supabase
+        .from('quiz_attempts')
+        .select('details, score, difficulty')
+        .eq('user_id', user!.id)
+        .order('created_at', { ascending: false })
+        .limit(20);
 
-      const recommendedTopics = analysis.recommendedFocus.length > 0
-        ? analysis.recommendedFocus
-        : analysis.weakTopics.slice(0, 5).map((t) => t.topic);
+      if (!quizzes || quizzes.length === 0) {
+        setPathGenerated(false);
+        setLoading(false);
+        return;
+      }
 
-      if (recommendedTopics.length > 0) {
-        await generatePath(recommendedTopics);
+      const topicScores: Record<string, { correct: number; total: number; avgScore: number }> = {};
+
+      quizzes.forEach((quiz) => {
+        const details = quiz.details as any[];
+        if (!Array.isArray(details)) return;
+
+        details.forEach((detail: any) => {
+          const question = detail.question || '';
+          const words = question.split(' ').filter((w: string) => w.length > 5);
+
+          words.forEach((word: string) => {
+            if (!topicScores[word]) {
+              topicScores[word] = { correct: 0, total: 0, avgScore: 0 };
+            }
+            topicScores[word].total++;
+            if (detail.isCorrect) {
+              topicScores[word].correct++;
+            }
+          });
+        });
+      });
+
+      const weakTopics = Object.entries(topicScores)
+        .filter(([_, stats]) => stats.total >= 3)
+        .map(([topic, stats]) => ({
+          topic,
+          accuracy: stats.correct / stats.total,
+          total: stats.total,
+        }))
+        .filter((t) => t.accuracy < 0.7)
+        .sort((a, b) => a.accuracy - b.accuracy)
+        .slice(0, 5);
+
+      if (weakTopics.length > 0) {
+        await generatePath(weakTopics.map(t => t.topic));
         setPathGenerated(true);
+      } else {
+        setPathGenerated(false);
       }
     } catch (error) {
       console.error('Failed to load study path:', error);
@@ -58,20 +100,31 @@ export function StudyPathPage() {
   };
 
   const generatePath = async (topics: string[]) => {
-    const materials = await generateWeaknessPracticeMaterials(user!.id, topics);
+    const { data: notes } = await supabase
+      .from('notes')
+      .select('title')
+      .eq('user_id', user!.id)
+      .limit(5);
 
-    const newPath: StudyPath[] = materials.map((m, index) => ({
-      topic: m.topic,
-      difficulty: index === 0 ? 'easy' : index === 1 ? 'medium' : 'hard',
-      estimatedDays: m.estimatedTime / 60 + 1,
-      materials: [
-        `Review ${m.topic} notes`,
-        `Complete ${m.questionCount} practice questions`,
-        `Create flashcards`,
-        `Take assessment quiz`,
-      ],
-      currentProgress: Math.random() * 50,
-    }));
+    const newPath: StudyPath[] = topics.map((topic, index) => {
+      const relatedNote = notes?.find(n =>
+        n.title.toLowerCase().includes(topic.toLowerCase())
+      );
+
+      return {
+        topic: topic.charAt(0).toUpperCase() + topic.slice(1),
+        difficulty: index < 2 ? 'easy' : index < 4 ? 'medium' : 'hard',
+        estimatedDays: 3 + index * 2,
+        materials: [
+          relatedNote ? `Review "${relatedNote.title}" notes` : `Review ${topic} notes`,
+          `Complete 10-15 practice questions on ${topic}`,
+          `Create flashcards for key ${topic} concepts`,
+          `Take a comprehensive ${topic} assessment`,
+          `Discuss ${topic} with study group`,
+        ],
+        currentProgress: Math.floor(Math.random() * 30),
+      };
+    });
 
     setStudyPath(newPath);
   };

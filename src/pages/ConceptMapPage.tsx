@@ -186,18 +186,41 @@ export function ConceptMapPage() {
               <div className="bg-slate-800 rounded-lg p-3 mb-3">
                 <div className="flex flex-wrap gap-2">
                   {Array.isArray(map.concepts) ? (
-                    (map.concepts as any[]).map((c, i) => (
-                      <span
-                        key={i}
-                        className="px-2 py-1 bg-cyan-500/20 text-cyan-300 rounded text-xs"
-                      >
-                        {c.name || c}
-                      </span>
-                    ))
+                    (() => {
+                      const concepts = (map.concepts as any).items || map.concepts;
+                      return Array.isArray(concepts) ? concepts.slice(0, 6).map((c: any, i: number) => (
+                        <span
+                          key={i}
+                          className="px-2 py-1 bg-cyan-500/20 text-cyan-300 rounded text-xs"
+                        >
+                          {typeof c === 'string' ? c : c.name || 'Concept'}
+                        </span>
+                      )) : <span className="text-gray-500 text-xs">No concepts</span>;
+                    })()
+                  ) : map.concepts && typeof map.concepts === 'object' ? (
+                    (() => {
+                      const concepts = (map.concepts as any).items || [];
+                      return Array.isArray(concepts) ? concepts.slice(0, 6).map((c: any, i: number) => (
+                        <span
+                          key={i}
+                          className="px-2 py-1 bg-cyan-500/20 text-cyan-300 rounded text-xs"
+                        >
+                          {typeof c === 'string' ? c : c.name || 'Concept'}
+                        </span>
+                      )) : <span className="text-gray-500 text-xs">No concepts</span>;
+                    })()
                   ) : (
                     <span className="text-gray-500 text-xs">No concepts</span>
                   )}
                 </div>
+                {(() => {
+                  const concepts = Array.isArray(map.concepts)
+                    ? map.concepts
+                    : (map.concepts as any)?.items || [];
+                  return concepts.length > 6 ? (
+                    <p className="text-xs text-gray-400 mt-2">+{concepts.length - 6} more</p>
+                  ) : null;
+                })()}
               </div>
 
               <div className="flex gap-2">
@@ -226,11 +249,17 @@ export function ConceptMapPage() {
                 {selectedMap.subject}
               </text>
 
-              {Array.isArray(selectedMap.concepts) &&
-                (selectedMap.concepts as any[]).slice(0, 4).map((concept, i) => {
-                  const angle = (i * Math.PI * 2) / 4;
-                  const x = 200 + Math.cos(angle) * 120;
-                  const y = 150 + Math.sin(angle) * 120;
+              {(() => {
+                const concepts = Array.isArray(selectedMap.concepts)
+                  ? selectedMap.concepts
+                  : (selectedMap.concepts as any)?.items || [];
+
+                return concepts.slice(0, 6).map((concept: any, i: number) => {
+                  const totalConcepts = Math.min(concepts.length, 6);
+                  const angle = (i * Math.PI * 2) / totalConcepts - Math.PI / 2;
+                  const x = 200 + Math.cos(angle) * 100;
+                  const y = 150 + Math.sin(angle) * 80;
+                  const conceptName = typeof concept === 'string' ? concept : concept.name || 'Concept';
 
                   return (
                     <g key={i}>
@@ -239,25 +268,25 @@ export function ConceptMapPage() {
                         y1="150"
                         x2={x}
                         y2={y}
-                        stroke="#64748b"
-                        strokeWidth="1"
+                        stroke="#0891b2"
+                        strokeWidth="2"
+                        opacity="0.5"
                       />
-                      <circle cx={x} cy={y} r="30" fill="#0891b2" opacity="0.3" stroke="#0891b2" />
+                      <circle cx={x} cy={y} r="35" fill="#0891b2" opacity="0.2" stroke="#06b6d4" strokeWidth="2" />
                       <text
                         x={x}
                         y={y}
                         textAnchor="middle"
                         dy="0.3em"
                         fill="#fff"
-                        className="text-xs"
+                        className="text-[10px] font-semibold"
                       >
-                        {typeof concept === 'string'
-                          ? concept.substring(0, 8)
-                          : concept.name?.substring(0, 8)}
+                        {conceptName.length > 10 ? conceptName.substring(0, 10) + '...' : conceptName}
                       </text>
                     </g>
                   );
-                })}
+                });
+              })()}
             </svg>
           </div>
           <button

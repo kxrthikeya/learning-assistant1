@@ -202,18 +202,38 @@ export function AchievementsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {lockedBadges.map((badge) => {
                 let progress = 0;
+                let current = 0;
+                let remaining = badge.requirement_value;
+                let progressText = '';
+
                 if (stats) {
                   switch (badge.requirement_type) {
                     case 'streak':
-                      progress = (stats.current_streak / badge.requirement_value) * 100;
+                      current = stats.current_streak;
+                      progress = (current / badge.requirement_value) * 100;
+                      remaining = Math.max(0, badge.requirement_value - current);
+                      progressText = remaining === 0
+                        ? 'Unlocked!'
+                        : `${remaining} day${remaining !== 1 ? 's' : ''} to go`;
                       break;
                     case 'time':
-                      progress =
-                        (stats.total_study_minutes / badge.requirement_value) *
-                        100;
+                      current = stats.total_study_minutes;
+                      progress = (current / badge.requirement_value) * 100;
+                      remaining = Math.max(0, badge.requirement_value - current);
+                      progressText = remaining === 0
+                        ? 'Unlocked!'
+                        : `${Math.ceil(remaining / 60)} hour${Math.ceil(remaining / 60) !== 1 ? 's' : ''} to go`;
                       break;
                     case 'accuracy':
-                      progress = (stats.mastery_score / badge.requirement_value) * 100;
+                      current = Math.round(stats.mastery_score);
+                      progress = (current / badge.requirement_value) * 100;
+                      remaining = Math.max(0, badge.requirement_value - current);
+                      progressText = remaining === 0
+                        ? 'Unlocked!'
+                        : `${remaining}% to go`;
+                      break;
+                    case 'quizzes':
+                      progressText = 'Complete more quizzes';
                       break;
                   }
                 }
@@ -223,7 +243,7 @@ export function AchievementsPage() {
                     key={badge.id}
                     className="p-6 text-center opacity-50 hover:opacity-75 transition-opacity"
                   >
-                    <div className="flex justify-center mb-3 text-gray-600">
+                    <div className="flex justify-center mb-3 text-gray-600 relative">
                       {getIconForBadge(badge.requirement_type)}
                       <Lock className="w-3 h-3 absolute mt-2 ml-2 text-gray-500" />
                     </div>
@@ -239,9 +259,14 @@ export function AchievementsPage() {
                         style={{ width: `${Math.min(progress, 100)}%` }}
                       />
                     </div>
-                    <p className="text-xs text-gray-500">
-                      {Math.round(Math.min(progress, 100))}%
+                    <p className="text-xs text-gray-500 mb-1">
+                      {Math.round(Math.min(progress, 100))}% complete
                     </p>
+                    {progressText && (
+                      <p className="text-xs font-semibold text-cyan-400">
+                        {progressText}
+                      </p>
+                    )}
                   </GlassCard>
                 );
               })}

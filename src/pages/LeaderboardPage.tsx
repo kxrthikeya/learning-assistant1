@@ -84,7 +84,7 @@ export function LeaderboardPage() {
     if (!groupForm.name || !user) return;
 
     try {
-      const { data: newGroup } = await supabase
+      const { data: newGroup, error: groupError } = await supabase
         .from('study_groups')
         .insert({
           creator_id: user.id,
@@ -96,11 +96,22 @@ export function LeaderboardPage() {
         .select()
         .single();
 
+      if (groupError) {
+        alert('Failed to create group: ' + groupError.message);
+        return;
+      }
+
       if (newGroup) {
-        await supabase.from('study_group_members').insert({
-          group_id: newGroup.id,
-          user_id: user.id,
-        });
+        const { error: memberError } = await supabase
+          .from('study_group_members')
+          .insert({
+            group_id: newGroup.id,
+            user_id: user.id,
+          });
+
+        if (memberError) {
+          console.error('Failed to add creator as member:', memberError);
+        }
 
         setGroups((prev) => [
           ...prev,
@@ -108,9 +119,81 @@ export function LeaderboardPage() {
         ]);
         setGroupForm({ name: '', description: '', subject: '', isPublic: true });
         setShowCreateGroup(false);
+        alert('Group created successfully!');
       }
     } catch (error) {
       console.error('Failed to create group:', error);
+      alert('Failed to create group. Please try again.');
+    }
+  };
+
+  const joinGroup = async (groupId: string) => {
+    if (!user) return;
+
+    try {
+      const { data: existing } = await supabase
+        .from('study_group_members')
+        .select('id')
+        .eq('group_id', groupId)
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (existing) {
+        alert('You are already a member of this group!');
+        return;
+      }
+
+      const { error } = await supabase
+        .from('study_group_members')
+        .insert({
+          group_id: groupId,
+          user_id: user.id,
+        });
+
+      if (error) {
+        alert('Failed to join group: ' + error.message);
+        return;
+      }
+
+      setGroups((prev) =>
+        prev.map((g) =>
+          g.id === groupId ? { ...g, memberCount: g.memberCount + 1 } : g
+        )
+      );
+      alert('Successfully joined the group!');
+      loadData();
+    } catch (error) {
+      console.error('Failed to join group:', error);
+      alert('Failed to join group. Please try again.');
+    }
+  };
+
+  const leaveGroup = async (groupId: string) => {
+    if (!user) return;
+
+    if (!confirm('Are you sure you want to leave this group?')) return;
+
+    try {
+      const { error } = await supabase
+        .from('study_group_members')
+        .delete()
+        .eq('group_id', groupId)
+        .eq('user_id', user.id);
+
+      if (error) {
+        alert('Failed to leave group: ' + error.message);
+        return;
+      }
+
+      setGroups((prev) =>
+        prev.map((g) =>
+          g.id === groupId ? { ...g, memberCount: Math.max(0, g.memberCount - 1) } : g
+        )
+      );
+      alert('You have left the group.');
+      loadData();
+    } catch (error) {
+      console.error('Failed to leave group:', error);
     }
   };
 
@@ -342,9 +425,21 @@ export function LeaderboardPage() {
                     {group.memberCount} members
                   </div>
 
-                  <Button className="w-full bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300">
-                    {group.creator_id === user?.id ? 'Manage' : 'Join Group'}
-                  </Button>
+                  {group.creator_id === user?.id ? (
+                    <Button
+                      onClick={() => leaveGroup(group.id)}
+                      className="w-full bg-red-500/20 hover:bg-red-500/30 text-red-300"
+                    >
+                      Leave Group (Creator)
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => joinGroup(group.id)}
+                      className="w-full bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300"
+                    >
+                      Join Group
+                    </Button>
+                  )}
                 </GlassCard>
               ))}
             </div>

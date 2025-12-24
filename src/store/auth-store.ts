@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
+import { initializeUserStats } from '../lib/stats-service';
 import type { User } from '@supabase/supabase-js';
 
 interface AuthState {
@@ -19,8 +20,16 @@ export const useAuthStore = create<AuthState>((set) => ({
   initialize: async () => {
     const { data: { session } } = await supabase.auth.getSession();
     set({ user: session?.user ?? null, initialized: true });
-    supabase.auth.onAuthStateChange((_event, session) => {
+
+    if (session?.user) {
+      await initializeUserStats(session.user.id).catch(err => console.error('Failed to initialize stats:', err));
+    }
+
+    supabase.auth.onAuthStateChange(async (_event, session) => {
       set({ user: session?.user ?? null });
+      if (session?.user) {
+        await initializeUserStats(session.user.id).catch(err => console.error('Failed to initialize stats:', err));
+      }
     });
   },
   signUp: async (email: string, password: string) => {
