@@ -196,6 +196,11 @@ export async function checkAndAwardAchievements(
 
   if (!stats || !badges) return newAchievements;
 
+  const { count: quizCount } = await supabase
+    .from('quiz_attempts')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', userId);
+
   for (const badge of badges) {
     if (earnedIds.has(badge.id)) continue;
 
@@ -210,6 +215,9 @@ export async function checkAndAwardAchievements(
         break;
       case 'accuracy':
         shouldAward = stats.mastery_score >= badge.requirement_value;
+        break;
+      case 'quizzes':
+        shouldAward = (quizCount || 0) >= badge.requirement_value;
         break;
     }
 
