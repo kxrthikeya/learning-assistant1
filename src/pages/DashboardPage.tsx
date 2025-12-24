@@ -68,7 +68,7 @@ export function DashboardPage() {
       <div className="w-full space-y-8">
         <div>
           <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2">Dashboard</h1>
-          <p className="text-slate-700 dark:text-slate-400">Your learning progress at a glance</p>
+          <p className="text-slate-600 dark:text-slate-400">Your learning progress at a glance</p>
         </div>
 
         <ContributionHeatmap

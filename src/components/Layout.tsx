@@ -71,7 +71,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                       isActive
                         ? isDark ? 'bg-primary-500/20 text-primary-300 shadow-soft' : 'bg-primary-100 text-primary-700 shadow-soft'
-                        : isDark ? 'text-slate-400 hover:text-primary-400 hover:bg-slate-700/40' : 'text-slate-800 hover:text-primary-700 hover:bg-primary-100'
+                        : isDark ? 'text-slate-400 hover:text-primary-400 hover:bg-slate-700/40' : 'text-slate-600 hover:text-primary-600 hover:bg-primary-50'
                     }`}
                   >
                     {item.label}
@@ -86,7 +86,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   className={`flex items-center gap-1.5 px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                     moreDropdownOpen
                       ? isDark ? 'bg-primary-500/20 text-primary-300' : 'bg-primary-100 text-primary-700'
-                      : isDark ? 'text-slate-400 hover:text-primary-400 hover:bg-slate-700/40' : 'text-slate-800 hover:text-primary-700 hover:bg-primary-100'
+                      : isDark ? 'text-slate-400 hover:text-primary-400 hover:bg-slate-700/40' : 'text-slate-600 hover:text-primary-600 hover:bg-primary-50'
                   }`}
                 >
                   More
@@ -107,7 +107,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                             className={`flex items-center gap-3 px-4 py-2.5 transition-all duration-200 ${
                               isActive
                                 ? isDark ? 'bg-primary-500/20 text-primary-300' : 'bg-primary-100 text-primary-700'
-                                : isDark ? 'text-slate-400 hover:text-primary-400 hover:bg-slate-700/40' : 'text-slate-800 hover:text-primary-700 hover:bg-primary-100'
+                                : isDark ? 'text-slate-400 hover:text-primary-400 hover:bg-slate-700/40' : 'text-slate-600 hover:text-primary-600 hover:bg-primary-50'
                             }`}
                           >
                             <Icon className="w-4 h-4 flex-shrink-0" />
@@ -126,7 +126,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-3 flex-shrink-0">
             <button
               onClick={toggleTheme}
-              className={`p-2.5 rounded-full transition-all ${isDark ? 'bg-slate-800/60 text-slate-300 hover:bg-slate-700' : 'glass-card text-slate-800 hover:bg-primary-100'}`}
+              className={`p-2.5 rounded-full transition-all ${isDark ? 'bg-slate-800/60 text-slate-300 hover:bg-slate-700' : 'glass-card text-slate-600 hover:bg-primary-50'}`}
             >
               {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
@@ -136,11 +136,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   <div className="w-7 h-7 rounded-full gradient-primary flex items-center justify-center text-white text-xs font-semibold">
                     {user.email?.[0]?.toUpperCase() || 'U'}
                   </div>
-                  <span className={`text-sm max-w-[120px] truncate ${isDark ? 'text-slate-300' : 'text-slate-800'}`}>{user.email}</span>
+                  <span className={`text-sm max-w-[120px] truncate ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{user.email}</span>
                 </div>
                 <button
                   onClick={signOut}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-all duration-200 ${isDark ? 'bg-slate-800/60 border border-slate-700/40 text-slate-400 hover:bg-red-500/20 hover:text-red-400' : 'glass-card text-slate-800 hover:bg-red-100 hover:text-red-700'}`}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-all duration-200 ${isDark ? 'bg-slate-800/60 border border-slate-700/40 text-slate-400 hover:bg-red-500/20 hover:text-red-400' : 'glass-card text-slate-600 hover:bg-red-50 hover:text-red-600'}`}
                 >
                   <LogOut className="w-4 h-4" />
                   <span className="hidden xl:inline">Sign Out</span>
@@ -183,7 +183,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     className={`px-6 py-4 rounded-2xl text-base font-medium transition-all duration-200 ${
                       isActive
                         ? isDark ? 'bg-primary-500/20 text-primary-300 shadow-soft' : 'bg-primary-100 text-primary-700 shadow-soft'
-                        : isDark ? 'bg-slate-800/60 text-slate-400 hover:text-primary-400 hover:bg-slate-700/60' : 'bg-white text-slate-800 hover:text-primary-700 hover:bg-primary-100'
+                        : isDark ? 'bg-slate-800/60 text-slate-400 hover:text-primary-400 hover:bg-slate-700/60' : 'bg-white text-slate-600 hover:text-primary-600 hover:bg-primary-50'
                     }`}
                   >
                     {item.label}
@@ -207,7 +207,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                       className={`flex items-center gap-3 px-6 py-3.5 rounded-2xl text-base font-medium transition-all duration-200 ${
                         isActive
                           ? isDark ? 'bg-primary-500/20 text-primary-300 shadow-soft' : 'bg-primary-100 text-primary-700 shadow-soft'
-                          : isDark ? 'bg-slate-800/60 text-slate-400 hover:text-primary-400 hover:bg-slate-700/60' : 'bg-white text-slate-800 hover:text-primary-700 hover:bg-primary-100'
+                          : isDark ? 'bg-slate-800/60 text-slate-400 hover:text-primary-400 hover:bg-slate-700/60' : 'bg-white text-slate-600 hover:text-primary-600 hover:bg-primary-50'
                       }`}
                     >
                       <Icon className="w-5 h-5 flex-shrink-0" />
@@ -225,7 +225,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center text-white text-sm font-semibold">
                     {user.email?.[0]?.toUpperCase() || 'U'}
                   </div>
-                  <span className={`text-sm truncate ${isDark ? 'text-slate-300' : 'text-slate-800'}`}>{user.email}</span>
+                  <span className={`text-sm truncate ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{user.email}</span>
                 </div>
                 <button
                   onClick={() => { signOut(); setMobileMenuOpen(false); }}
