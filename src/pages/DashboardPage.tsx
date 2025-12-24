@@ -54,7 +54,7 @@ export function DashboardPage() {
 
   const handleReset = async () => { if (!user) return; if (confirm('Reset all progress?')) await resetAllData(user.id); };
 
-  if (!user) return <GlassCard className="p-8 text-center"><h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-4">Sign in to view dashboard</h2><Button onClick={() => navigate('/auth')}>Sign In</Button></GlassCard>;
+  if (!user) return <GlassCard className="p-8 text-center"><h2 className="text-xl font-bold text-slate-900 mb-4">Sign in to view dashboard</h2><Button onClick={() => navigate('/auth')}>Sign In</Button></GlassCard>;
 
   const features = [
     { id: 'goals', icon: CheckSquare, label: 'Goals', color: 'cyan', description: 'Set and track learning goals' },
@@ -67,8 +67,8 @@ export function DashboardPage() {
     <div className="flex gap-6">
       <div className="w-full space-y-8">
         <div>
-          <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2">Dashboard</h1>
-          <p className="text-slate-600 dark:text-slate-400">Your learning progress at a glance</p>
+          <h1 className="text-4xl font-bold text-slate-900 mb-2">Dashboard</h1>
+          <p className="text-slate-600">Your learning progress at a glance</p>
         </div>
 
         <ContributionHeatmap

@@ -60,11 +60,11 @@ export function HomePage() {
           {/* Left: Hero Content */}
           <div className="space-y-6">
             <div className="space-y-3">
-              <span className="inline-block px-4 py-2 bg-primary-100 dark:bg-primary-500/20 text-primary-700 dark:text-primary-300 text-xs font-semibold rounded-full">AI-Powered Learning</span>
-              <h1 className="text-5xl md:text-6xl font-bold text-slate-900 dark:text-slate-100 leading-tight">
+              <span className="inline-block px-4 py-2 bg-primary-100 text-primary-700 text-xs font-semibold rounded-full">AI-Powered Learning</span>
+              <h1 className="text-5xl md:text-6xl font-bold text-slate-900 leading-tight">
                 Learn smarter, not harder.
               </h1>
-              <p className="text-xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl">
+              <p className="text-xl text-slate-600 leading-relaxed max-w-xl">
                 Master complex concepts, predict exam patterns, and optimize your study strategy with AI-powered insights designed for engineering students.
               </p>
             </div>
@@ -90,26 +90,26 @@ export function HomePage() {
           <GlassCard className="p-6 md:p-8 h-full">
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Your AI Study Overview</h3>
+                <h3 className="text-lg font-semibold text-slate-900">Your AI Study Overview</h3>
                 <Brain className="w-6 h-6 text-primary-600" />
               </div>
 
-              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed line-clamp-3 bg-primary-50 dark:bg-primary-500/10 p-4 rounded-lg">
+              <p className="text-slate-600 text-sm leading-relaxed line-clamp-3 bg-primary-50 p-4 rounded-lg">
                 {latestSummary.substring(0, 150)}{latestSummary.length > 150 ? '...' : ''}
               </p>
 
               <div className="grid grid-cols-3 gap-3">
-                <div className="text-center p-3 bg-primary-50 dark:bg-primary-500/10 rounded-lg">
+                <div className="text-center p-3 bg-primary-50 rounded-lg">
                   <div className="text-2xl font-bold text-primary-600">{totalAttempts}</div>
-                  <div className="text-xs text-slate-600 dark:text-slate-400 mt-1">Quizzes</div>
+                  <div className="text-xs text-slate-600 mt-1">Quizzes</div>
                 </div>
-                <div className="text-center p-3 bg-accent-50 dark:bg-accent-500/10 rounded-lg">
+                <div className="text-center p-3 bg-accent-50 rounded-lg">
                   <div className="text-2xl font-bold text-accent-600">{avgScore}%</div>
-                  <div className="text-xs text-slate-600 dark:text-slate-400 mt-1">Avg Score</div>
+                  <div className="text-xs text-slate-600 mt-1">Avg Score</div>
                 </div>
-                <div className="text-center p-3 bg-orange-50 dark:bg-orange-500/10 rounded-lg">
+                <div className="text-center p-3 bg-orange-50 rounded-lg">
                   <div className="text-2xl font-bold text-orange-600">{streak}d</div>
-                  <div className="text-xs text-slate-600 dark:text-slate-400 mt-1">Streak</div>
+                  <div className="text-xs text-slate-600 mt-1">Streak</div>
                 </div>
               </div>
 
@@ -130,16 +130,16 @@ export function HomePage() {
         <GlassCard className="p-6">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-slate-900 dark:text-slate-100">Today's Focus</h3>
+              <h3 className="font-semibold text-slate-900">Today's Focus</h3>
               <Target className="w-5 h-5 text-primary-600" />
             </div>
             <div className="space-y-2">
-              <p className="text-sm text-slate-600 dark:text-slate-400">Current Topic</p>
-              <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+              <p className="text-sm text-slate-600">Current Topic</p>
+              <p className="text-lg font-semibold text-slate-900">
                 {notes.length > 0 ? notes[0].title.substring(0, 20) : 'Pick a topic'}
               </p>
             </div>
-            <div className="text-sm text-slate-600 dark:text-slate-400">Est. 45 min</div>
+            <div className="text-sm text-slate-600">Est. 45 min</div>
           </div>
         </GlassCard>
 
@@ -147,18 +147,18 @@ export function HomePage() {
         <GlassCard className="p-6">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-slate-900 dark:text-slate-100">Progress</h3>
+              <h3 className="font-semibold text-slate-900">Progress</h3>
               <Clock className="w-5 h-5 text-accent-600" />
             </div>
             <div className="space-y-3">
-              <div className="text-sm text-slate-600 dark:text-slate-400">Weekly Goal</div>
-              <div className="w-full bg-primary-100 dark:bg-primary-500/20 rounded-full h-2 overflow-hidden">
+              <div className="text-sm text-slate-600">Weekly Goal</div>
+              <div className="w-full bg-primary-100 rounded-full h-2 overflow-hidden">
                 <div
                   className="gradient-primary h-full transition-all"
                   style={{ width: `${Math.min((totalStudyMinutes / 300) * 100, 100)}%` }}
                 />
               </div>
-              <div className="text-sm font-medium text-slate-900 dark:text-slate-100">
+              <div className="text-sm font-medium text-slate-900">
                 {totalStudyMinutes} / 300 min
               </div>
             </div>
@@ -169,10 +169,10 @@ export function HomePage() {
         <GlassCard className="p-6 border-l-4 border-accent-600">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-slate-900 dark:text-slate-100">Exam Predictor</h3>
+              <h3 className="font-semibold text-slate-900">Exam Predictor</h3>
               <TrendingUp className="w-5 h-5 text-accent-600" />
             </div>
-            <p className="text-sm text-slate-600 dark:text-slate-400">Flagship Feature</p>
+            <p className="text-sm text-slate-600">Flagship Feature</p>
             <Link to="/predictor">
               <Button variant="secondary" size="sm" className="w-full">
                 Predict Exam
@@ -186,16 +186,16 @@ export function HomePage() {
         <GlassCard className="p-6">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-slate-900 dark:text-slate-100">Recent Activity</h3>
+              <h3 className="font-semibold text-slate-900">Recent Activity</h3>
               <BookOpen className="w-5 h-5 text-primary-600" />
             </div>
             <div className="space-y-2 text-sm">
-              <p className="text-slate-600 dark:text-slate-400">
+              <p className="text-slate-600">
                 {totalAttempts > 0
                   ? `${totalAttempts} quiz${totalAttempts !== 1 ? 'zes' : ''} taken`
                   : 'No quizzes yet'}
               </p>
-              <p className="text-slate-600 dark:text-slate-400">
+              <p className="text-slate-600">
                 {focusSessions.length > 0
                   ? `${focusSessions.length} focus session${focusSessions.length !== 1 ? 's' : ''}`
                   : 'Start a session'}
@@ -208,7 +208,7 @@ export function HomePage() {
       {/* Study Streak Heatmap */}
       {user && (
         <div className="space-y-4">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Study Activity</h2>
+          <h2 className="text-2xl font-bold text-slate-900">Study Activity</h2>
           <GlassCard className="p-6">
             <ContributionHeatmap quizAttempts={quizAttempts} uploads={notes} currentStreak={streak} />
           </GlassCard>
@@ -218,7 +218,7 @@ export function HomePage() {
       {/* Advanced Features Section */}
       <div className="space-y-6">
         <div className="flex items-center gap-3">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Advanced Features</h2>
+          <h2 className="text-3xl font-bold text-slate-900">Advanced Features</h2>
           <div className="h-1 flex-1 bg-gradient-to-r from-primary-500 to-transparent rounded-full"></div>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -230,10 +230,10 @@ export function HomePage() {
                   <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                     <Icon className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                  <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-primary-600 transition-colors">
                     {feature.title}
                   </h3>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                  <p className="text-slate-600 text-sm leading-relaxed">
                     {feature.description}
                   </p>
                 </GlassCard>
@@ -268,28 +268,28 @@ export function HomePage() {
 
       {/* Tech Stack Section */}
       <GlassCard className="p-8 text-center">
-        <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-8">Built for Performance</h3>
+        <h3 className="text-2xl font-bold text-slate-900 mb-8">Built for Performance</h3>
         <div className="flex flex-wrap justify-center items-center gap-8">
           <div className="flex flex-col items-center gap-3">
-            <div className="w-16 h-16 rounded-2xl bg-primary-100 dark:bg-primary-500/20 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center">
               <span className="text-3xl">⚛️</span>
             </div>
-            <p className="text-slate-900 dark:text-slate-100 font-semibold">React</p>
-            <p className="text-slate-600 dark:text-slate-400 text-xs">UI Framework</p>
+            <p className="text-slate-900 font-semibold">React</p>
+            <p className="text-slate-600 text-xs">UI Framework</p>
           </div>
           <div className="flex flex-col items-center gap-3">
-            <div className="w-16 h-16 rounded-2xl bg-accent-100 dark:bg-accent-500/20 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-2xl bg-accent-100 flex items-center justify-center">
               <span className="text-3xl">🤖</span>
             </div>
-            <p className="text-slate-900 dark:text-slate-100 font-semibold">Gemini AI</p>
-            <p className="text-slate-600 dark:text-slate-400 text-xs">AI Engine</p>
+            <p className="text-slate-900 font-semibold">Gemini AI</p>
+            <p className="text-slate-600 text-xs">AI Engine</p>
           </div>
           <div className="flex flex-col items-center gap-3">
-            <div className="w-16 h-16 rounded-2xl bg-green-100 dark:bg-green-500/20 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-2xl bg-green-100 flex items-center justify-center">
               <span className="text-3xl">⚡</span>
             </div>
-            <p className="text-slate-900 dark:text-slate-100 font-semibold">Supabase</p>
-            <p className="text-slate-600 dark:text-slate-400 text-xs">Database & Auth</p>
+            <p className="text-slate-900 font-semibold">Supabase</p>
+            <p className="text-slate-600 text-xs">Database & Auth</p>
           </div>
         </div>
       </GlassCard>

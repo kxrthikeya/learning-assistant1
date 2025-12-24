@@ -17,24 +17,13 @@ import { ConceptMapPage } from './pages/ConceptMapPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
 import { StudyTipsPage } from './pages/StudyTipsPage';
 import { useAuthStore } from './store/auth-store';
-import { useThemeStore } from './store/theme-store';
 
 function AppContent() {
   const { initialize, initialized, user } = useAuthStore();
-  const { isDark } = useThemeStore();
 
   useEffect(() => {
     initialize();
   }, [initialize]);
-
-  useEffect(() => {
-    const htmlElement = document.documentElement;
-    if (isDark) {
-      htmlElement.classList.remove('light');
-    } else {
-      htmlElement.classList.add('light');
-    }
-  }, [isDark]);
 
   if (!initialized) {
     return (

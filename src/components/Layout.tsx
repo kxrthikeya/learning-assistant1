@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, Upload, LayoutDashboard, Sparkles, Brain, ChevronDown, FileText, Zap, Award, AlertCircle, MapPin, Network, Users, Timer, LogOut, Menu, X, Moon, Sun } from 'lucide-react';
+import { BookOpen, Upload, LayoutDashboard, Sparkles, Brain, ChevronDown, FileText, Zap, Award, AlertCircle, MapPin, Network, Users, Timer, LogOut, Menu, X } from 'lucide-react';
 import { useAuthStore } from '../store/auth-store';
-import { useThemeStore } from '../store/theme-store';
 import { AIAssistant } from './AIAssistant';
 
 const primaryNavItems = [
@@ -29,7 +28,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const { user, signOut } = useAuthStore();
-  const { isDark, toggleTheme } = useThemeStore();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -42,7 +40,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-gradient-dark' : 'bg-gradient-light'}`}>
+    <div className="min-h-screen bg-gradient-light">
       {/* Floating Command Island Navigation */}
       <header className="fixed top-0 left-0 right-0 z-50 pt-4 px-4">
         <div className="max-w-[1400px] mx-auto flex items-center justify-between gap-4">
@@ -53,15 +51,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <BookOpen className="w-5 h-5 text-white" />
               </div>
               <div className="hidden sm:flex flex-col">
-                <span className={`text-xs font-semibold ${isDark ? 'text-primary-400' : 'text-primary-600'} tracking-wider`}>AI-POWERED</span>
-                <span className={`text-lg font-bold ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>EasyStudy</span>
+                <span className="text-xs font-semibold text-primary-600 tracking-wider">AI-POWERED</span>
+                <span className="text-lg font-bold text-slate-900">EasyStudy</span>
               </div>
             </div>
           </Link>
 
           {/* Primary Navigation - Floating Command Island */}
           <nav className="hidden lg:flex items-center justify-center flex-1 max-w-2xl">
-            <div className={`flex items-center gap-1 px-4 py-2.5 rounded-full ${isDark ? 'bg-slate-800/60 backdrop-blur-md border border-slate-700/40' : 'glass-card'}`}>
+            <div className="flex items-center gap-1 px-4 py-2.5 rounded-full glass-card">
               {primaryNavItems.map((item) => {
                 const isActive = location.pathname === item.to;
                 return (
@@ -70,8 +68,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     to={item.to}
                     className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                       isActive
-                        ? isDark ? 'bg-primary-500/20 text-primary-300 shadow-soft' : 'bg-primary-100 text-primary-700 shadow-soft'
-                        : isDark ? 'text-slate-400 hover:text-primary-400 hover:bg-slate-700/40' : 'text-slate-600 hover:text-primary-600 hover:bg-primary-50'
+                        ? 'bg-primary-100 text-primary-700 shadow-soft'
+                        : 'text-slate-600 hover:text-primary-600 hover:bg-primary-50'
                     }`}
                   >
                     {item.label}
@@ -85,8 +83,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
                   className={`flex items-center gap-1.5 px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                     moreDropdownOpen
-                      ? isDark ? 'bg-primary-500/20 text-primary-300' : 'bg-primary-100 text-primary-700'
-                      : isDark ? 'text-slate-400 hover:text-primary-400 hover:bg-slate-700/40' : 'text-slate-600 hover:text-primary-600 hover:bg-primary-50'
+                      ? 'bg-primary-100 text-primary-700'
+                      : 'text-slate-600 hover:text-primary-600 hover:bg-primary-50'
                   }`}
                 >
                   More
@@ -94,7 +92,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 </button>
 
                 {moreDropdownOpen && (
-                  <div className={`absolute top-full right-0 mt-2 w-56 rounded-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 ${isDark ? 'bg-slate-800/80 backdrop-blur-md border border-slate-700/40' : 'glass-card'}`}>
+                  <div className="absolute top-full right-0 mt-2 w-56 glass-card rounded-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                     <div className="py-2">
                       {moreNavItems.map((item) => {
                         const Icon = item.icon;
@@ -106,8 +104,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
                             onClick={() => setMoreDropdownOpen(false)}
                             className={`flex items-center gap-3 px-4 py-2.5 transition-all duration-200 ${
                               isActive
-                                ? isDark ? 'bg-primary-500/20 text-primary-300' : 'bg-primary-100 text-primary-700'
-                                : isDark ? 'text-slate-400 hover:text-primary-400 hover:bg-slate-700/40' : 'text-slate-600 hover:text-primary-600 hover:bg-primary-50'
+                                ? 'bg-primary-100 text-primary-700'
+                                : 'text-slate-600 hover:text-primary-600 hover:bg-primary-50'
                             }`}
                           >
                             <Icon className="w-4 h-4 flex-shrink-0" />
@@ -124,23 +122,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
           {/* User Section & Mobile Menu */}
           <div className="flex items-center gap-3 flex-shrink-0">
-            <button
-              onClick={toggleTheme}
-              className={`p-2.5 rounded-full transition-all ${isDark ? 'bg-slate-800/60 text-slate-300 hover:bg-slate-700' : 'glass-card text-slate-600 hover:bg-primary-50'}`}
-            >
-              {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            </button>
             {user ? (
               <div className="hidden lg:flex items-center gap-3">
-                <div className={`flex items-center gap-2.5 px-3 py-2 rounded-full ${isDark ? 'bg-slate-800/60 border border-slate-700/40' : 'glass-card'}`}>
+                <div className="flex items-center gap-2.5 px-3 py-2 glass-card rounded-full">
                   <div className="w-7 h-7 rounded-full gradient-primary flex items-center justify-center text-white text-xs font-semibold">
                     {user.email?.[0]?.toUpperCase() || 'U'}
                   </div>
-                  <span className={`text-sm max-w-[120px] truncate ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{user.email}</span>
+                  <span className="text-sm text-slate-700 max-w-[120px] truncate">{user.email}</span>
                 </div>
                 <button
                   onClick={signOut}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-all duration-200 ${isDark ? 'bg-slate-800/60 border border-slate-700/40 text-slate-400 hover:bg-red-500/20 hover:text-red-400' : 'glass-card text-slate-600 hover:bg-red-50 hover:text-red-600'}`}
+                  className="flex items-center gap-2 px-4 py-2 rounded-full glass-card text-sm text-slate-600 hover:bg-red-50 hover:text-red-600 transition-all duration-200"
                 >
                   <LogOut className="w-4 h-4" />
                   <span className="hidden xl:inline">Sign Out</span>
@@ -157,10 +149,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
             {/* Mobile Menu Button */}
             <button
-              className={`lg:hidden p-2.5 rounded-full transition-all ${isDark ? 'bg-slate-800/60 text-slate-300 hover:bg-slate-700' : 'glass-card hover:bg-primary-50 text-slate-900'}`}
+              className="lg:hidden p-2.5 rounded-full glass-card hover:bg-primary-50 transition-all"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? <X className="w-5 h-5 text-slate-900" /> : <Menu className="w-5 h-5 text-slate-900" />}
             </button>
           </div>
         </div>
@@ -170,7 +162,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
-          <div className={`relative h-full flex flex-col pt-20 pb-6 px-4 overflow-y-auto ${isDark ? 'bg-gradient-dark' : 'bg-gradient-light'}`}>
+          <div className="relative h-full flex flex-col pt-20 pb-6 px-4 overflow-y-auto bg-gradient-light">
             {/* Primary Mobile Menu Items */}
             <div className="flex flex-col gap-2 mb-6">
               {primaryNavItems.map((item) => {
@@ -182,8 +174,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`px-6 py-4 rounded-2xl text-base font-medium transition-all duration-200 ${
                       isActive
-                        ? isDark ? 'bg-primary-500/20 text-primary-300 shadow-soft' : 'bg-primary-100 text-primary-700 shadow-soft'
-                        : isDark ? 'bg-slate-800/60 text-slate-400 hover:text-primary-400 hover:bg-slate-700/60' : 'bg-white text-slate-600 hover:text-primary-600 hover:bg-primary-50'
+                        ? 'bg-primary-100 text-primary-700 shadow-soft'
+                        : 'bg-white text-slate-600 hover:text-primary-600 hover:bg-primary-50'
                     }`}
                   >
                     {item.label}
@@ -193,8 +185,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
             </div>
 
             {/* Secondary Menu Items */}
-            <div className={`border-t pt-4 mb-6 ${isDark ? 'border-slate-700' : 'border-primary-200'}`}>
-              <div className={`text-xs font-semibold uppercase tracking-wider px-2 mb-3 ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>More</div>
+            <div className="border-t border-primary-200 pt-4 mb-6">
+              <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-2 mb-3">More</div>
               <div className="flex flex-col gap-2">
                 {moreNavItems.map((item) => {
                   const Icon = item.icon;
@@ -206,8 +198,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
                       onClick={() => setMobileMenuOpen(false)}
                       className={`flex items-center gap-3 px-6 py-3.5 rounded-2xl text-base font-medium transition-all duration-200 ${
                         isActive
-                          ? isDark ? 'bg-primary-500/20 text-primary-300 shadow-soft' : 'bg-primary-100 text-primary-700 shadow-soft'
-                          : isDark ? 'bg-slate-800/60 text-slate-400 hover:text-primary-400 hover:bg-slate-700/60' : 'bg-white text-slate-600 hover:text-primary-600 hover:bg-primary-50'
+                          ? 'bg-primary-100 text-primary-700 shadow-soft'
+                          : 'bg-white text-slate-600 hover:text-primary-600 hover:bg-primary-50'
                       }`}
                     >
                       <Icon className="w-5 h-5 flex-shrink-0" />
@@ -221,15 +213,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
             {/* User Section or Sign In */}
             {user ? (
               <div className="mt-auto space-y-3">
-                <div className={`flex items-center gap-3 px-6 py-4 rounded-2xl ${isDark ? 'bg-slate-800/60 border border-slate-700/40' : 'glass-card'}`}>
+                <div className="flex items-center gap-3 px-6 py-4 glass-card rounded-2xl">
                   <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center text-white text-sm font-semibold">
                     {user.email?.[0]?.toUpperCase() || 'U'}
                   </div>
-                  <span className={`text-sm truncate ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{user.email}</span>
+                  <span className="text-sm text-slate-700 truncate">{user.email}</span>
                 </div>
                 <button
                   onClick={() => { signOut(); setMobileMenuOpen(false); }}
-                  className={`w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-medium transition-all duration-200 ${isDark ? 'bg-red-500/20 text-red-400 hover:bg-red-500/30' : 'bg-red-50 text-red-600 hover:bg-red-100'}`}
+                  className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-red-50 text-red-600 hover:bg-red-100 transition-all duration-200 font-medium"
                 >
                   <LogOut className="w-5 h-5" />
                   <span>Sign Out</span>
