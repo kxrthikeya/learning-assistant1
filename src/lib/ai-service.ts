@@ -82,6 +82,26 @@ export async function generatePredictedPaper(
   }
 }
 
+export async function generateQuizFromSyllabusGroq(
+  syllabus: string,
+  numQuestions: number,
+  difficulty: 'easy' | 'medium' | 'hard',
+  bloomLevel: 'REMEMBER' | 'UNDERSTAND' | 'APPLY' | 'ANALYZE' | 'EVALUATE' | 'CREATE'
+): Promise<QuizQuestion[]> {
+  try {
+    const result = await callEdgeFunction('generate-quiz-groq', {
+      syllabus,
+      numQuestions,
+      difficulty,
+      bloomLevel,
+    });
+    return result.questions;
+  } catch (error) {
+    console.error('Groq quiz generation failed:', error);
+    return generateLocalQuiz(syllabus, difficulty, numQuestions);
+  }
+}
+
 function fileToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
