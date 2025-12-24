@@ -144,8 +144,8 @@ export function StudyPathPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-4xl font-bold text-white mb-2">Personalized Study Path</h1>
-        <p className="text-gray-400">
+        <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">Personalized Study Path</h1>
+        <p className="text-gray-600 dark:text-gray-400">
           AI-generated roadmap based on your learning patterns
         </p>
       </div>
@@ -153,7 +153,7 @@ export function StudyPathPage() {
       {studyPath.length === 0 ? (
         <GlassCard className="text-center py-12">
           <MapPin className="w-12 h-12 text-gray-500 mx-auto mb-4 opacity-50" />
-          <p className="text-gray-400 mb-4">
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
             No study path yet. Complete some quizzes first to generate your personalized path!
           </p>
           <Button className="mx-auto bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600">
@@ -165,31 +165,31 @@ export function StudyPathPage() {
           <GlassCard>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center">
-                <MapPin className="w-8 h-8 text-cyan-400 mx-auto mb-2" />
-                <div className="text-3xl font-bold text-white">
+                <MapPin className="w-8 h-8 text-cyan-700 dark:text-cyan-400 mx-auto mb-2" />
+                <div className="text-3xl font-bold text-slate-900 dark:text-white">
                   {studyPath.length}
                 </div>
-                <p className="text-gray-400">Topics</p>
+                <p className="text-gray-600 dark:text-gray-400">Topics</p>
               </div>
 
               <div className="text-center">
                 <Clock className="w-8 h-8 text-amber-400 mx-auto mb-2" />
-                <div className="text-3xl font-bold text-white">
+                <div className="text-3xl font-bold text-slate-900 dark:text-white">
                   {calculateTotalDays()}
                 </div>
-                <p className="text-gray-400">Days to Complete</p>
+                <p className="text-gray-600 dark:text-gray-400">Days to Complete</p>
               </div>
 
               <div className="text-center">
                 <Target className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
-                <div className="text-3xl font-bold text-white">
+                <div className="text-3xl font-bold text-slate-900 dark:text-white">
                   {Math.round(
                     studyPath.reduce((sum, p) => sum + p.currentProgress, 0) /
                       studyPath.length
                   )}
                   %
                 </div>
-                <p className="text-gray-400">Overall Progress</p>
+                <p className="text-gray-600 dark:text-gray-400">Overall Progress</p>
               </div>
             </div>
           </GlassCard>
@@ -201,16 +201,16 @@ export function StudyPathPage() {
                   <div className="flex items-start gap-4">
                     <div className="flex-shrink-0">
                       <div className="flex items-center justify-center w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-500/50">
-                        <span className="text-sm font-bold text-cyan-400">
+                        <span className="text-sm font-bold text-cyan-700 dark:text-cyan-400">
                           {index + 1}
                         </span>
                       </div>
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-white mb-1">
+                      <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-1">
                         {path.topic}
                       </h3>
-                      <div className="flex gap-3 text-sm text-gray-400">
+                      <div className="flex gap-3 text-sm text-gray-600 dark:text-gray-400">
                         <span className="px-2 py-1 bg-slate-700 rounded">
                           {path.difficulty}
                         </span>
@@ -223,8 +223,8 @@ export function StudyPathPage() {
 
                 <div className="mb-4">
                   <div className="flex justify-between items-center mb-2">
-                    <p className="text-sm font-medium text-gray-400">Progress</p>
-                    <p className="text-sm font-bold text-cyan-400">
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Progress</p>
+                    <p className="text-sm font-bold text-cyan-700 dark:text-cyan-400">
                       {Math.round(path.currentProgress)}%
                     </p>
                   </div>
@@ -237,7 +237,7 @@ export function StudyPathPage() {
                 </div>
 
                 <div className="space-y-2 mb-4">
-                  <p className="text-sm font-medium text-gray-400 mb-3">
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-3">
                     Learning Materials
                   </p>
                   {path.materials.map((material, i) => (
@@ -246,7 +246,7 @@ export function StudyPathPage() {
                       className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700/50 transition-colors"
                     >
                       <BookOpen className="w-4 h-4 text-gray-500 flex-shrink-0" />
-                      <span className="text-sm text-gray-300">{material}</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-300">{material}</span>
                     </div>
                   ))}
                 </div>

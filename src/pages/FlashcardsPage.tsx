@@ -210,12 +210,12 @@ export function FlashcardsPage() {
       <div className="max-w-2xl mx-auto">
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold text-white">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
               Card {currentCardIndex + 1} of {dueCards.length}
             </h2>
             <button
               onClick={() => finishSession()}
-              className="text-sm text-gray-400 hover:text-gray-200 transition-colors"
+              className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-200 transition-colors"
             >
               Exit Session
             </button>
@@ -235,10 +235,10 @@ export function FlashcardsPage() {
           className="min-h-64 flex flex-col justify-center items-center cursor-pointer hover:scale-105 transition-transform"
           onClick={() => setIsFlipped(!isFlipped)}
         >
-          <p className="text-center text-gray-400 text-sm mb-4">
+          <p className="text-center text-gray-600 dark:text-gray-400 text-sm mb-4">
             {isFlipped ? 'Answer' : 'Question'}
           </p>
-          <p className="text-center text-2xl font-semibold text-white">
+          <p className="text-center text-2xl font-semibold text-slate-900 dark:text-white">
             {isFlipped ? currentCard?.answer : currentCard?.question}
           </p>
           <p className="text-center text-gray-500 text-sm mt-8">
@@ -248,7 +248,7 @@ export function FlashcardsPage() {
 
         {isFlipped && (
           <div className="mt-8 space-y-3">
-            <p className="text-center text-gray-400 text-sm">
+            <p className="text-center text-gray-600 dark:text-gray-400 text-sm">
               How well did you remember this?
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
@@ -262,7 +262,7 @@ export function FlashcardsPage() {
                 <button
                   key={quality}
                   onClick={() => handleReviewResult(quality as any)}
-                  className={`py-3 rounded-lg font-semibold text-white transition-all hover:scale-105 bg-gradient-to-br ${color}`}
+                  className={`py-3 rounded-lg font-semibold text-slate-900 dark:text-white transition-all hover:scale-105 bg-gradient-to-br ${color}`}
                 >
                   {label}
                 </button>
@@ -278,8 +278,8 @@ export function FlashcardsPage() {
     <div className="space-y-8">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-4xl font-bold text-white mb-2">Flashcards</h1>
-          <p className="text-gray-400">
+          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">Flashcards</h1>
+          <p className="text-gray-600 dark:text-gray-400">
             {dueCards.length} cards due for review today
           </p>
         </div>
@@ -310,10 +310,10 @@ export function FlashcardsPage() {
 
       {showForm && (
         <GlassCard>
-          <h3 className="text-xl font-semibold text-white mb-4">Add Flashcard</h3>
+          <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">Add Flashcard</h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
                 Question
               </label>
               <input
@@ -323,11 +323,11 @@ export function FlashcardsPage() {
                   setNewCard((prev) => ({ ...prev, question: e.target.value }))
                 }
                 placeholder="Enter question"
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500"
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-cyan-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
                 Answer
               </label>
               <textarea
@@ -337,11 +337,11 @@ export function FlashcardsPage() {
                 }
                 placeholder="Enter answer"
                 rows={3}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 resize-none"
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-cyan-500 resize-none"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
                 Topic (optional)
               </label>
               <input
@@ -351,7 +351,7 @@ export function FlashcardsPage() {
                   setNewCard((prev) => ({ ...prev, topic: e.target.value }))
                 }
                 placeholder="e.g., Biology, History"
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500"
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-cyan-500"
               />
             </div>
             <div className="flex gap-3">
@@ -375,7 +375,7 @@ export function FlashcardsPage() {
       {flashcards.length === 0 ? (
         <GlassCard className="text-center py-12">
           <RotateCw className="w-12 h-12 text-gray-500 mx-auto mb-4 opacity-50" />
-          <p className="text-gray-400">No flashcards yet. Create one to get started!</p>
+          <p className="text-gray-600 dark:text-gray-400">No flashcards yet. Create one to get started!</p>
         </GlassCard>
       ) : (
         <div className="grid gap-4">
@@ -393,8 +393,8 @@ export function FlashcardsPage() {
                 className="flex justify-between items-center p-4"
               >
                 <div className="flex-1">
-                  <p className="text-white font-semibold mb-2">{card.question}</p>
-                  <div className="flex gap-4 text-sm text-gray-400">
+                  <p className="text-slate-900 dark:text-white font-semibold mb-2">{card.question}</p>
+                  <div className="flex gap-4 text-sm text-gray-600 dark:text-gray-400">
                     {card.topic && <span>Topic: {card.topic}</span>}
                     {card.review && (
                       <>

@@ -95,7 +95,7 @@ export function ConceptMapPage() {
     <div className="space-y-8">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-4xl font-bold text-white mb-2">Concept Maps</h1>
+          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">Concept Maps</h1>
           <p className="text-gray-400">Visualize topic relationships and connections</p>
         </div>
         <Button
@@ -109,7 +109,7 @@ export function ConceptMapPage() {
 
       {showForm && (
         <GlassCard>
-          <h3 className="text-xl font-semibold text-white mb-4">Create Concept Map</h3>
+          <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">Create Concept Map</h3>
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-400 mb-2">
@@ -122,7 +122,7 @@ export function ConceptMapPage() {
                   setFormData((prev) => ({ ...prev, subject: e.target.value }))
                 }
                 placeholder="e.g., Biology, Physics"
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500"
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-cyan-500"
               />
             </div>
             <div>
@@ -136,7 +136,7 @@ export function ConceptMapPage() {
                 }
                 placeholder="e.g., Cell, Mitochondria, DNA, Photosynthesis"
                 rows={4}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 resize-none"
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-cyan-500 resize-none"
               />
             </div>
             <div className="flex gap-3">
@@ -171,7 +171,7 @@ export function ConceptMapPage() {
               onClick={() => setSelectedMap(map)}
             >
               <div className="flex justify-between items-start mb-3">
-                <h3 className="text-lg font-semibold text-white">{map.subject}</h3>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{map.subject}</h3>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -239,7 +239,7 @@ export function ConceptMapPage() {
 
       {selectedMap && (
         <GlassCard className="border-l-4 border-cyan-500">
-          <h3 className="text-xl font-semibold text-white mb-4">
+          <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">
             {selectedMap.subject} - Map Preview
           </h3>
           <div className="bg-slate-800 rounded-lg p-6 mb-4">

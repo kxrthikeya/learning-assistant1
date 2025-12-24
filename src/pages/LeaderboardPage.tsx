@@ -208,7 +208,7 @@ export function LeaderboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-4xl font-bold text-white mb-2">Community</h1>
+        <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">Community</h1>
         <p className="text-gray-400">Compete with others and join study groups</p>
       </div>
 
@@ -217,7 +217,7 @@ export function LeaderboardPage() {
           onClick={() => setSelectedTab('leaderboard')}
           className={`px-4 py-2 rounded-lg font-medium transition-all ${
             selectedTab === 'leaderboard'
-              ? 'bg-cyan-500 text-white'
+              ? 'bg-cyan-500 text-slate-900 dark:text-white'
               : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
           }`}
         >
@@ -228,7 +228,7 @@ export function LeaderboardPage() {
           onClick={() => setSelectedTab('groups')}
           className={`px-4 py-2 rounded-lg font-medium transition-all ${
             selectedTab === 'groups'
-              ? 'bg-cyan-500 text-white'
+              ? 'bg-cyan-500 text-slate-900 dark:text-white'
               : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
           }`}
         >
@@ -240,7 +240,7 @@ export function LeaderboardPage() {
       {selectedTab === 'leaderboard' ? (
         <div className="space-y-4">
           <GlassCard>
-            <h2 className="text-2xl font-bold text-white mb-6">Top Scholars</h2>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Top Scholars</h2>
 
             {leaderboard.length === 0 ? (
               <p className="text-gray-400 text-center py-8">
@@ -274,7 +274,7 @@ export function LeaderboardPage() {
                     </div>
 
                     <div className="flex-1">
-                      <p className="font-semibold text-white">
+                      <p className="font-semibold text-slate-900 dark:text-white">
                         User {entry.user_id.substring(0, 8)}
                       </p>
                       {entry.streak && (
@@ -286,7 +286,7 @@ export function LeaderboardPage() {
                     </div>
 
                     <div className="text-right">
-                      <div className="text-xl font-bold text-cyan-400">
+                      <div className="text-xl font-bold text-cyan-700 dark:text-cyan-400">
                         {Math.round(entry.score)}
                       </div>
                       <p className="text-xs text-gray-400">points</p>
@@ -311,7 +311,7 @@ export function LeaderboardPage() {
 
           {showCreateGroup && (
             <GlassCard>
-              <h3 className="text-xl font-semibold text-white mb-4">
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">
                 Create Study Group
               </h3>
               <div className="space-y-4">
@@ -326,7 +326,7 @@ export function LeaderboardPage() {
                       setGroupForm((prev) => ({ ...prev, name: e.target.value }))
                     }
                     placeholder="e.g., Biology Buddies"
-                    className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500"
+                    className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-cyan-500"
                   />
                 </div>
                 <div>
@@ -343,7 +343,7 @@ export function LeaderboardPage() {
                     }
                     placeholder="What's your group about?"
                     rows={3}
-                    className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 resize-none"
+                    className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-cyan-500 resize-none"
                   />
                 </div>
                 <div>
@@ -357,10 +357,10 @@ export function LeaderboardPage() {
                       setGroupForm((prev) => ({ ...prev, subject: e.target.value }))
                     }
                     placeholder="e.g., Biology"
-                    className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500"
+                    className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-cyan-500"
                   />
                 </div>
-                <label className="flex items-center gap-3 text-white">
+                <label className="flex items-center gap-3 text-slate-900 dark:text-white">
                   <input
                     type="checkbox"
                     checked={groupForm.isPublic}
@@ -402,7 +402,7 @@ export function LeaderboardPage() {
                 <GlassCard key={group.id} className="p-6 hover:border-cyan-400/50 transition-all">
                   <div className="flex justify-between items-start mb-3">
                     <div>
-                      <h3 className="text-lg font-semibold text-white">
+                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
                         {group.name}
                       </h3>
                       {group.subject && (

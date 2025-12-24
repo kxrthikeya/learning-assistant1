@@ -228,7 +228,7 @@ export function HomePage() {
               <Link key={feature.title} to={feature.to}>
                 <GlassCard className="p-6 h-full group hover:shadow-soft-lg transition-all">
                   <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                    <Icon className="w-6 h-6 text-white" />
+                    <Icon className="w-6 h-6 text-slate-900 dark:text-white" />
                   </div>
                   <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                     {feature.title}
@@ -245,14 +245,14 @@ export function HomePage() {
 
       {/* Focus Time Section */}
       {user && totalStudyMinutes > 0 && (
-        <GlassCard className="p-8 gradient-success text-white">
+        <GlassCard className="p-8 gradient-success text-slate-900 dark:text-white">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
-                <Brain className="w-8 h-8 text-white" />
+                <Brain className="w-8 h-8 text-slate-900 dark:text-white" />
               </div>
               <div>
-                <p className="text-white/80 text-sm mb-1">Total Focus Time</p>
+                <p className="text-slate-900 dark:text-slate-900/80 dark:text-white/80 text-sm mb-1">Total Focus Time</p>
                 <p className="text-4xl font-bold">{totalStudyMinutes} <span className="text-lg">minutes</span></p>
               </div>
             </div>

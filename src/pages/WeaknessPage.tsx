@@ -85,7 +85,7 @@ export function WeaknessPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-4xl font-bold text-white mb-2">Weakness Analysis</h1>
+        <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">Weakness Analysis</h1>
         <p className="text-gray-400">Identify areas that need improvement</p>
       </div>
 
@@ -94,7 +94,7 @@ export function WeaknessPage() {
           <div className="flex gap-3">
             <Info className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="text-sm font-semibold text-white mb-1">Sample Analysis</h3>
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-1">Sample Analysis</h3>
               <p className="text-sm text-gray-400">
                 This is sample data to demonstrate the weakness analysis feature. Take some quizzes to see your personalized analysis.
               </p>
@@ -106,21 +106,21 @@ export function WeaknessPage() {
       <GlassCard>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
-            <div className="text-4xl font-bold text-cyan-400 mb-2">
+            <div className="text-4xl font-bold text-cyan-700 dark:text-cyan-400 mb-2">
               {Math.round(overallAccuracy)}%
             </div>
             <p className="text-gray-400">Overall Accuracy</p>
           </div>
 
           <div className="text-center">
-            <div className="text-4xl font-bold text-emerald-400 mb-2">
+            <div className="text-4xl font-bold text-emerald-700 dark:text-emerald-400 mb-2">
               {weakTopics.length}
             </div>
             <p className="text-gray-400">Topics Analyzed</p>
           </div>
 
           <div className="text-center">
-            <div className="text-4xl font-bold text-amber-400 mb-2">
+            <div className="text-4xl font-bold text-amber-700 dark:text-amber-400 mb-2">
               {recommendedFocus.length}
             </div>
             <p className="text-gray-400">Focus Areas</p>
@@ -131,9 +131,9 @@ export function WeaknessPage() {
       {recommendedFocus.length > 0 && (
         <GlassCard className="border-l-4 border-amber-500 bg-amber-500/5">
           <div className="flex gap-3 mb-4">
-            <AlertCircle className="w-6 h-6 text-amber-400 flex-shrink-0 mt-1" />
+            <AlertCircle className="w-6 h-6 text-amber-700 dark:text-amber-400 flex-shrink-0 mt-1" />
             <div>
-              <h3 className="text-lg font-semibold text-white mb-3">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">
                 Recommended Focus
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -154,7 +154,7 @@ export function WeaknessPage() {
       )}
 
       <div>
-        <h2 className="text-2xl font-bold text-white mb-4">Topic Performance</h2>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Topic Performance</h2>
         <div className="grid gap-4">
           {weakTopics.map((topic) => (
               <GlassCard
@@ -166,7 +166,7 @@ export function WeaknessPage() {
               >
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <h3 className="text-lg font-semibold text-white">
+                    <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
                       {topic.topic}
                     </h3>
                     <p className="text-sm text-gray-400">
@@ -205,32 +205,32 @@ export function WeaknessPage() {
 
       {selectedTopic && (
         <GlassCard className="border-l-4 border-blue-500 bg-blue-500/5">
-          <h3 className="text-lg font-semibold text-white mb-4">
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
             Recommended Practice: {selectedTopic}
           </h3>
           <div className="space-y-3">
             <div className="flex items-start gap-3 p-3 bg-slate-800 rounded-lg">
               <BookOpen className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
               <div>
-                <p className="font-medium text-white">Review Materials</p>
+                <p className="font-medium text-slate-900 dark:text-white">Review Materials</p>
                 <p className="text-sm text-gray-400">
                   Review your notes on {selectedTopic}
                 </p>
               </div>
             </div>
             <div className="flex items-start gap-3 p-3 bg-slate-800 rounded-lg">
-              <Zap className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
+              <Zap className="w-5 h-5 text-amber-700 dark:text-amber-400 mt-0.5 flex-shrink-0" />
               <div>
-                <p className="font-medium text-white">Practice Quiz</p>
+                <p className="font-medium text-slate-900 dark:text-white">Practice Quiz</p>
                 <p className="text-sm text-gray-400">
                   Take a focused quiz on {selectedTopic}
                 </p>
               </div>
             </div>
             <div className="flex items-start gap-3 p-3 bg-slate-800 rounded-lg">
-              <BookOpen className="w-5 h-5 text-cyan-400 mt-0.5 flex-shrink-0" />
+              <BookOpen className="w-5 h-5 text-cyan-700 dark:text-cyan-400 mt-0.5 flex-shrink-0" />
               <div>
-                <p className="font-medium text-white">Flashcard Review</p>
+                <p className="font-medium text-slate-900 dark:text-white">Flashcard Review</p>
                 <p className="text-sm text-gray-400">
                   Review flashcards related to {selectedTopic}
                 </p>

@@ -95,7 +95,7 @@ export function AchievementsPage() {
 
   return (
     <div className="space-y-8">
-      <h1 className="text-4xl font-bold text-white mb-8">Achievements</h1>
+      <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-8">Achievements</h1>
 
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -103,10 +103,10 @@ export function AchievementsPage() {
             <div className="flex justify-center mb-3">
               <Flame className="w-8 h-8 text-orange-400" />
             </div>
-            <div className="text-3xl font-bold text-white mb-1">
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">
               {stats.current_streak}
             </div>
-            <p className="text-gray-400 text-sm">Current Streak</p>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">Current Streak</p>
             <p className="text-gray-500 text-xs mt-2">
               Best: {stats.longest_streak}
             </p>
@@ -116,10 +116,10 @@ export function AchievementsPage() {
             <div className="flex justify-center mb-3">
               <Clock className="w-8 h-8 text-blue-400" />
             </div>
-            <div className="text-3xl font-bold text-white mb-1">
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">
               {Math.floor(stats.total_study_minutes / 60)}h
             </div>
-            <p className="text-gray-400 text-sm">Total Study Time</p>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">Total Study Time</p>
             <p className="text-gray-500 text-xs mt-2">
               {stats.total_study_minutes % 60}m today
             </p>
@@ -127,22 +127,22 @@ export function AchievementsPage() {
 
           <GlassCard className="text-center p-6">
             <div className="flex justify-center mb-3">
-              <Target className="w-8 h-8 text-cyan-400" />
+              <Target className="w-8 h-8 text-cyan-700 dark:text-cyan-400" />
             </div>
-            <div className="text-3xl font-bold text-white mb-1">
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">
               {Math.round(stats.mastery_score)}%
             </div>
-            <p className="text-gray-400 text-sm">Mastery Score</p>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">Mastery Score</p>
           </GlassCard>
 
           <GlassCard className="text-center p-6">
             <div className="flex justify-center mb-3">
               <Award className="w-8 h-8 text-yellow-400" />
             </div>
-            <div className="text-3xl font-bold text-white mb-1">
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">
               {earnedBadges.length}
             </div>
-            <p className="text-gray-400 text-sm">Badges Earned</p>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">Badges Earned</p>
             <p className="text-gray-500 text-xs mt-2">
               {lockedBadges.length} to unlock
             </p>
@@ -152,7 +152,7 @@ export function AchievementsPage() {
 
       {stats && stats.weak_topics.length > 0 && (
         <GlassCard>
-          <h3 className="text-lg font-semibold text-white mb-4">
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
             Focus Areas
           </h3>
           <div className="flex flex-wrap gap-2">
@@ -169,11 +169,11 @@ export function AchievementsPage() {
       )}
 
       <div>
-        <h2 className="text-2xl font-bold text-white mb-4">Badges</h2>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Badges</h2>
 
         {earnedBadges.length > 0 && (
           <div>
-            <h3 className="text-lg font-semibold text-white mb-3 text-green-400">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-3 text-green-700 dark:text-green-400">
               Earned
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
@@ -185,10 +185,10 @@ export function AchievementsPage() {
                   <div className="flex justify-center mb-3">
                     {getIconForBadge(badge.requirement_type)}
                   </div>
-                  <h4 className="text-white font-semibold mb-2">
+                  <h4 className="text-slate-900 dark:text-white font-semibold mb-2">
                     {badge.name}
                   </h4>
-                  <p className="text-gray-400 text-sm mb-3">
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">
                     {badge.description}
                   </p>
                   <div className="bg-green-500/20 border border-green-500/50 rounded px-2 py-1 inline-block text-xs text-green-300">
@@ -202,7 +202,7 @@ export function AchievementsPage() {
 
         {lockedBadges.length > 0 && (
           <div>
-            <h3 className="text-lg font-semibold text-white mb-3 text-gray-400">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-3 text-gray-600 dark:text-gray-400">
               Locked
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -259,7 +259,7 @@ export function AchievementsPage() {
                       {getIconForBadge(badge.requirement_type)}
                       <Lock className="w-3 h-3 absolute mt-2 ml-2 text-gray-500" />
                     </div>
-                    <h4 className="text-gray-400 font-semibold mb-2">
+                    <h4 className="text-gray-600 dark:text-gray-400 font-semibold mb-2">
                       {badge.name}
                     </h4>
                     <p className="text-gray-500 text-sm mb-3">
@@ -275,7 +275,7 @@ export function AchievementsPage() {
                       {Math.round(Math.min(progress, 100))}% complete
                     </p>
                     {progressText && (
-                      <p className="text-xs font-semibold text-cyan-400">
+                      <p className="text-xs font-semibold text-cyan-700 dark:text-cyan-400">
                         {progressText}
                       </p>
                     )}
