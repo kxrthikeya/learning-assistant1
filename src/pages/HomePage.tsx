@@ -64,7 +64,7 @@ export function HomePage() {
               <h1 className="text-5xl md:text-6xl font-bold text-slate-900 dark:text-slate-100 leading-tight">
                 Learn smarter, not harder.
               </h1>
-              <p className="text-xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl">
+              <p className="text-xl text-slate-700 dark:text-slate-400 leading-relaxed max-w-xl">
                 Master complex concepts, predict exam patterns, and optimize your study strategy with AI-powered insights designed for engineering students.
               </p>
             </div>
@@ -94,22 +94,22 @@ export function HomePage() {
                 <Brain className="w-6 h-6 text-primary-600" />
               </div>
 
-              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed line-clamp-3 bg-primary-50 dark:bg-primary-500/10 p-4 rounded-lg">
+              <p className="text-slate-700 dark:text-slate-400 text-sm leading-relaxed line-clamp-3 bg-primary-50 dark:bg-primary-500/10 p-4 rounded-lg">
                 {latestSummary.substring(0, 150)}{latestSummary.length > 150 ? '...' : ''}
               </p>
 
               <div className="grid grid-cols-3 gap-3">
                 <div className="text-center p-3 bg-primary-50 dark:bg-primary-500/10 rounded-lg">
                   <div className="text-2xl font-bold text-primary-600">{totalAttempts}</div>
-                  <div className="text-xs text-slate-600 dark:text-slate-400 mt-1">Quizzes</div>
+                  <div className="text-xs text-slate-700 dark:text-slate-400 mt-1">Quizzes</div>
                 </div>
                 <div className="text-center p-3 bg-accent-50 dark:bg-accent-500/10 rounded-lg">
                   <div className="text-2xl font-bold text-accent-600">{avgScore}%</div>
-                  <div className="text-xs text-slate-600 dark:text-slate-400 mt-1">Avg Score</div>
+                  <div className="text-xs text-slate-700 dark:text-slate-400 mt-1">Avg Score</div>
                 </div>
                 <div className="text-center p-3 bg-orange-50 dark:bg-orange-500/10 rounded-lg">
                   <div className="text-2xl font-bold text-orange-600">{streak}d</div>
-                  <div className="text-xs text-slate-600 dark:text-slate-400 mt-1">Streak</div>
+                  <div className="text-xs text-slate-700 dark:text-slate-400 mt-1">Streak</div>
                 </div>
               </div>
 
@@ -134,12 +134,12 @@ export function HomePage() {
               <Target className="w-5 h-5 text-primary-600" />
             </div>
             <div className="space-y-2">
-              <p className="text-sm text-slate-600 dark:text-slate-400">Current Topic</p>
+              <p className="text-sm text-slate-700 dark:text-slate-400">Current Topic</p>
               <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                 {notes.length > 0 ? notes[0].title.substring(0, 20) : 'Pick a topic'}
               </p>
             </div>
-            <div className="text-sm text-slate-600 dark:text-slate-400">Est. 45 min</div>
+            <div className="text-sm text-slate-700 dark:text-slate-400">Est. 45 min</div>
           </div>
         </GlassCard>
 
@@ -151,7 +151,7 @@ export function HomePage() {
               <Clock className="w-5 h-5 text-accent-600" />
             </div>
             <div className="space-y-3">
-              <div className="text-sm text-slate-600 dark:text-slate-400">Weekly Goal</div>
+              <div className="text-sm text-slate-700 dark:text-slate-400">Weekly Goal</div>
               <div className="w-full bg-primary-100 dark:bg-primary-500/20 rounded-full h-2 overflow-hidden">
                 <div
                   className="gradient-primary h-full transition-all"
@@ -172,7 +172,7 @@ export function HomePage() {
               <h3 className="font-semibold text-slate-900 dark:text-slate-100">Exam Predictor</h3>
               <TrendingUp className="w-5 h-5 text-accent-600" />
             </div>
-            <p className="text-sm text-slate-600 dark:text-slate-400">Flagship Feature</p>
+            <p className="text-sm text-slate-700 dark:text-slate-400">Flagship Feature</p>
             <Link to="/predictor">
               <Button variant="secondary" size="sm" className="w-full">
                 Predict Exam
@@ -190,12 +190,12 @@ export function HomePage() {
               <BookOpen className="w-5 h-5 text-primary-600" />
             </div>
             <div className="space-y-2 text-sm">
-              <p className="text-slate-600 dark:text-slate-400">
+              <p className="text-slate-700 dark:text-slate-400">
                 {totalAttempts > 0
                   ? `${totalAttempts} quiz${totalAttempts !== 1 ? 'zes' : ''} taken`
                   : 'No quizzes yet'}
               </p>
-              <p className="text-slate-600 dark:text-slate-400">
+              <p className="text-slate-700 dark:text-slate-400">
                 {focusSessions.length > 0
                   ? `${focusSessions.length} focus session${focusSessions.length !== 1 ? 's' : ''}`
                   : 'Start a session'}
@@ -233,7 +233,7 @@ export function HomePage() {
                   <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                     {feature.title}
                   </h3>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                  <p className="text-slate-700 dark:text-slate-400 text-sm leading-relaxed">
                     {feature.description}
                   </p>
                 </GlassCard>
@@ -275,21 +275,21 @@ export function HomePage() {
               <span className="text-3xl">⚛️</span>
             </div>
             <p className="text-slate-900 dark:text-slate-100 font-semibold">React</p>
-            <p className="text-slate-600 dark:text-slate-400 text-xs">UI Framework</p>
+            <p className="text-slate-700 dark:text-slate-400 text-xs">UI Framework</p>
           </div>
           <div className="flex flex-col items-center gap-3">
             <div className="w-16 h-16 rounded-2xl bg-accent-100 dark:bg-accent-500/20 flex items-center justify-center">
               <span className="text-3xl">🤖</span>
             </div>
             <p className="text-slate-900 dark:text-slate-100 font-semibold">Gemini AI</p>
-            <p className="text-slate-600 dark:text-slate-400 text-xs">AI Engine</p>
+            <p className="text-slate-700 dark:text-slate-400 text-xs">AI Engine</p>
           </div>
           <div className="flex flex-col items-center gap-3">
             <div className="w-16 h-16 rounded-2xl bg-green-100 dark:bg-green-500/20 flex items-center justify-center">
               <span className="text-3xl">⚡</span>
             </div>
             <p className="text-slate-900 dark:text-slate-100 font-semibold">Supabase</p>
-            <p className="text-slate-600 dark:text-slate-400 text-xs">Database & Auth</p>
+            <p className="text-slate-700 dark:text-slate-400 text-xs">Database & Auth</p>
           </div>
         </div>
       </GlassCard>
