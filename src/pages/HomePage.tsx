@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Upload, FileText, Brain, ArrowRight, TrendingUp, Network, RotateCw, AlertCircle, Route, Users } from 'lucide-react';
+import { Upload, Zap, TrendingUp, Network, RotateCw, AlertCircle, Route, Users, ArrowRight, Brain, Clock, Target, Award, BookOpen } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
 import { StatCard } from '../components/StatCard';
 import { Button } from '../components/Button';
+import { ContributionHeatmap } from '../components/ContributionHeatmap';
 import { useAuthStore } from '../store/auth-store';
 import { useAppStore } from '../store/app-store';
 
@@ -41,109 +42,254 @@ export function HomePage() {
   };
 
   const streak = calculateStreak();
-  const latestSummary = notes[0]?.summary || 'No summary yet. Upload your notes to begin.';
+  const latestSummary = notes[0]?.summary || 'No summary yet. Upload your notes to begin your learning journey with EasyStudy.';
   const advancedFeatures = [
-    { title: 'Exam Prediction', description: 'AI analyzes patterns to predict likely exam questions and topics', icon: TrendingUp, to: '/predictor', gradient: 'from-cyan-500/20 to-blue-500/20' },
-    { title: 'Concept Mapping', description: 'Visualize relationships between topics with interactive concept maps', icon: Network, to: '/concept-map', gradient: 'from-blue-500/20 to-purple-500/20' },
-    { title: 'SRS Flashcards', description: 'Spaced repetition system optimizes review timing for long-term retention', icon: RotateCw, to: '/flashcards', gradient: 'from-purple-500/20 to-pink-500/20' },
-    { title: 'Weakness Detection', description: 'Identify knowledge gaps and get targeted practice recommendations', icon: AlertCircle, to: '/weakness', gradient: 'from-pink-500/20 to-rose-500/20' },
-    { title: 'Study Path', description: 'Personalized learning roadmap based on your performance and goals', icon: Route, to: '/study-path', gradient: 'from-rose-500/20 to-orange-500/20' },
-    { title: 'Community Tips', description: 'Proven study strategies and insights from top-performing students', icon: Users, to: '/tips', gradient: 'from-orange-500/20 to-cyan-500/20' },
+    { title: 'Exam Prediction', description: 'AI analyzes patterns to predict likely exam questions and topics', icon: TrendingUp, to: '/predictor', gradient: 'from-primary-500/20 to-accent-500/20' },
+    { title: 'Concept Mapping', description: 'Visualize relationships between topics with interactive concept maps', icon: Network, to: '/concepts', gradient: 'from-accent-500/20 to-primary-500/20' },
+    { title: 'SRS Flashcards', description: 'Spaced repetition system optimizes review timing for long-term retention', icon: RotateCw, to: '/flashcards', gradient: 'from-primary-400/20 to-accent-400/20' },
+    { title: 'Weakness Detection', description: 'Identify knowledge gaps and get targeted practice recommendations', icon: AlertCircle, to: '/weakness', gradient: 'from-accent-400/20 to-primary-400/20' },
+    { title: 'Study Path', description: 'Personalized learning roadmap based on your performance and goals', icon: Route, to: '/study-path', gradient: 'from-primary-500/20 to-accent-500/20' },
+    { title: 'Community Tips', description: 'Proven study strategies and insights from top-performing students', icon: Users, to: '/tips', gradient: 'from-accent-500/20 to-primary-500/20' },
   ];
 
   return (
-    <div className="space-y-8">
-      <GlassCard gradient="cyan" className="p-8 md:p-10">
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
+    <div className="space-y-12">
+      {/* Hero Section */}
+      <div className="space-y-8">
+        <div className="grid lg:grid-cols-2 gap-8 items-center">
+          {/* Left: Hero Content */}
           <div className="space-y-6">
-            <div className="inline-block">
-              <p className="text-xs uppercase tracking-[0.3em] text-cyan-300 font-semibold mb-2">Revise faster. Learn smarter.</p>
-              <div className="h-0.5 w-20 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full"></div>
+            <div className="space-y-3">
+              <span className="inline-block px-4 py-2 bg-primary-100 text-primary-700 text-xs font-semibold rounded-full">AI-Powered Learning</span>
+              <h1 className="text-5xl md:text-6xl font-bold text-slate-900 leading-tight">
+                Learn smarter, not harder.
+              </h1>
+              <p className="text-xl text-slate-600 leading-relaxed max-w-xl">
+                Master complex concepts, predict exam patterns, and optimize your study strategy with AI-powered insights designed for engineering students.
+              </p>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight">
-              Your AI-Powered <span className="text-gradient">Study Companion</span>
-            </h2>
-            <p className="text-slate-300 text-lg leading-relaxed">Engineered for engineering students. Master complex concepts, predict exam patterns, identify knowledge gaps, and optimize your study strategy with AI-powered insights.</p>
-            <div className="flex flex-wrap gap-4 pt-2">
-              <Link to={user ? '/upload' : '/auth'}><Button variant="gradient" size="lg">Get Started<ArrowRight className="w-5 h-5" /></Button></Link>
-              <Link to="/dashboard"><Button variant="secondary" size="lg">View Dashboard</Button></Link>
+
+            {/* Primary Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <Link to={user ? '/upload' : '/auth'}>
+                <Button variant="gradient" size="lg" className="w-full sm:w-auto">
+                  <Upload className="w-5 h-5" />
+                  Upload Notes
+                </Button>
+              </Link>
+              <Link to={user ? '/quiz' : '/auth'}>
+                <Button variant="secondary" size="lg" className="w-full sm:w-auto">
+                  <Zap className="w-5 h-5" />
+                  Start Quiz
+                </Button>
+              </Link>
             </div>
           </div>
-          <div className="bg-gradient-to-br from-cyan-500/10 via-blue-500/5 to-transparent border border-cyan-500/20 rounded-2xl p-6 backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm text-cyan-200 font-semibold">Latest Summary Preview</p>
-              <FileText className="w-5 h-5 text-cyan-400" />
+
+          {/* Right: AI Overview Card */}
+          <GlassCard className="p-6 md:p-8 h-full">
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-slate-900">Your AI Study Overview</h3>
+                <Brain className="w-6 h-6 text-primary-600" />
+              </div>
+
+              <p className="text-slate-600 text-sm leading-relaxed line-clamp-3 bg-primary-50 p-4 rounded-lg">
+                {latestSummary.substring(0, 150)}{latestSummary.length > 150 ? '...' : ''}
+              </p>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div className="text-center p-3 bg-primary-50 rounded-lg">
+                  <div className="text-2xl font-bold text-primary-600">{totalAttempts}</div>
+                  <div className="text-xs text-slate-600 mt-1">Quizzes</div>
+                </div>
+                <div className="text-center p-3 bg-accent-50 rounded-lg">
+                  <div className="text-2xl font-bold text-accent-600">{avgScore}%</div>
+                  <div className="text-xs text-slate-600 mt-1">Avg Score</div>
+                </div>
+                <div className="text-center p-3 bg-orange-50 rounded-lg">
+                  <div className="text-2xl font-bold text-orange-600">{streak}d</div>
+                  <div className="text-xs text-slate-600 mt-1">Streak</div>
+                </div>
+              </div>
+
+              <Link to="/dashboard" className="block">
+                <Button variant="secondary" size="md" className="w-full">
+                  View Full Dashboard
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
             </div>
-            <p className="text-slate-100 text-sm leading-relaxed line-clamp-4 mb-6">{latestSummary.substring(0, 200)}{latestSummary.length > 200 ? '...' : ''}</p>
-            <div className="grid grid-cols-3 gap-3">
-              <StatCard label="Quizzes" value={totalAttempts} gradient="from-cyan-500/20 to-blue-500/20" />
-              <StatCard label="Avg Score" value={`${avgScore}%`} gradient="from-blue-500/20 to-cyan-500/20" />
-              <StatCard label="Streak" value={`${streak}d`} gradient="from-emerald-500/20 to-cyan-500/20" />
-            </div>
-          </div>
+          </GlassCard>
         </div>
-      </GlassCard>
-      <div className="space-y-4">
+      </div>
+
+      {/* Dashboard Cards Grid */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Today's Focus Card */}
+        <GlassCard className="p-6">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-slate-900">Today's Focus</h3>
+              <Target className="w-5 h-5 text-primary-600" />
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm text-slate-600">Current Topic</p>
+              <p className="text-lg font-semibold text-slate-900">
+                {notes.length > 0 ? notes[0].title.substring(0, 20) : 'Pick a topic'}
+              </p>
+            </div>
+            <div className="text-sm text-slate-600">Est. 45 min</div>
+          </div>
+        </GlassCard>
+
+        {/* Progress Card */}
+        <GlassCard className="p-6">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-slate-900">Progress</h3>
+              <Clock className="w-5 h-5 text-accent-600" />
+            </div>
+            <div className="space-y-3">
+              <div className="text-sm text-slate-600">Weekly Goal</div>
+              <div className="w-full bg-primary-100 rounded-full h-2 overflow-hidden">
+                <div
+                  className="gradient-primary h-full transition-all"
+                  style={{ width: `${Math.min((totalStudyMinutes / 300) * 100, 100)}%` }}
+                />
+              </div>
+              <div className="text-sm font-medium text-slate-900">
+                {totalStudyMinutes} / 300 min
+              </div>
+            </div>
+          </div>
+        </GlassCard>
+
+        {/* Exam Predictor Card */}
+        <GlassCard className="p-6 border-l-4 border-accent-600">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-slate-900">Exam Predictor</h3>
+              <TrendingUp className="w-5 h-5 text-accent-600" />
+            </div>
+            <p className="text-sm text-slate-600">Flagship Feature</p>
+            <Link to="/predictor">
+              <Button variant="secondary" size="sm" className="w-full">
+                Predict Exam
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+          </div>
+        </GlassCard>
+
+        {/* Recent Activity Card */}
+        <GlassCard className="p-6">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-slate-900">Recent Activity</h3>
+              <BookOpen className="w-5 h-5 text-primary-600" />
+            </div>
+            <div className="space-y-2 text-sm">
+              <p className="text-slate-600">
+                {totalAttempts > 0
+                  ? `${totalAttempts} quiz${totalAttempts !== 1 ? 'zes' : ''} taken`
+                  : 'No quizzes yet'}
+              </p>
+              <p className="text-slate-600">
+                {focusSessions.length > 0
+                  ? `${focusSessions.length} focus session${focusSessions.length !== 1 ? 's' : ''}`
+                  : 'Start a session'}
+              </p>
+            </div>
+          </div>
+        </GlassCard>
+      </div>
+
+      {/* Study Streak Heatmap */}
+      {user && (
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold text-slate-900">Study Activity</h2>
+          <GlassCard className="p-6">
+            <ContributionHeatmap userId={user.id} />
+          </GlassCard>
+        </div>
+      )}
+
+      {/* Advanced Features Section */}
+      <div className="space-y-6">
         <div className="flex items-center gap-3">
-          <h3 className="text-2xl font-bold text-white">Advanced Features</h3>
-          <div className="h-px flex-1 bg-gradient-to-r from-cyan-500/50 to-transparent"></div>
+          <h2 className="text-3xl font-bold text-slate-900">Advanced Features</h2>
+          <div className="h-1 flex-1 bg-gradient-to-r from-primary-500 to-transparent rounded-full"></div>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {advancedFeatures.map((feature) => {
             const Icon = feature.icon;
             return (
               <Link key={feature.title} to={feature.to}>
-                <GlassCard hover gradient="blue" className="p-6 h-full group">
+                <GlassCard className="p-6 h-full group hover:shadow-soft-lg transition-all">
                   <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                     <Icon className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors">{feature.title}</h3>
-                  <p className="text-slate-300 text-sm leading-relaxed">{feature.description}</p>
+                  <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-primary-600 transition-colors">
+                    {feature.title}
+                  </h3>
+                  <p className="text-slate-600 text-sm leading-relaxed">
+                    {feature.description}
+                  </p>
                 </GlassCard>
               </Link>
             );
           })}
         </div>
       </div>
+
+      {/* Focus Time Section */}
       {user && totalStudyMinutes > 0 && (
-        <GlassCard gradient="emerald" className="p-6 md:p-8">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <GlassCard className="p-8 gradient-success text-white">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center shadow-lg">
-                <Brain className="w-7 h-7 text-white" />
+              <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
+                <Brain className="w-8 h-8 text-white" />
               </div>
               <div>
-                <p className="text-slate-400 text-sm mb-1">Total Focus Time</p>
-                <p className="text-3xl font-bold text-white">{totalStudyMinutes} <span className="text-lg text-slate-400">minutes</span></p>
+                <p className="text-white/80 text-sm mb-1">Total Focus Time</p>
+                <p className="text-4xl font-bold">{totalStudyMinutes} <span className="text-lg">minutes</span></p>
               </div>
             </div>
-            <Link to="/pomodoro"><Button variant="gradient" size="lg">Start Pomodoro</Button></Link>
+            <Link to="/pomodoro">
+              <Button variant="secondary" size="lg" className="text-slate-900 font-semibold">
+                <Clock className="w-5 h-5" />
+                Start Pomodoro
+              </Button>
+            </Link>
           </div>
         </GlassCard>
       )}
-      <GlassCard gradient="slate" className="p-8 text-center">
-        <h3 className="text-2xl font-bold text-white mb-6">Built for Performance</h3>
+
+      {/* Tech Stack Section */}
+      <GlassCard className="p-8 text-center">
+        <h3 className="text-2xl font-bold text-slate-900 mb-8">Built for Performance</h3>
         <div className="flex flex-wrap justify-center items-center gap-8">
-          <div className="flex flex-col items-center gap-2">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center">
-              <span className="text-2xl font-bold text-cyan-400">⚛️</span>
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center">
+              <span className="text-3xl">⚛️</span>
             </div>
-            <p className="text-white font-semibold">React</p>
-            <p className="text-slate-400 text-xs">UI Framework</p>
+            <p className="text-slate-900 font-semibold">React</p>
+            <p className="text-slate-600 text-xs">UI Framework</p>
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center">
-              <span className="text-2xl font-bold text-emerald-400">🤖</span>
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-16 h-16 rounded-2xl bg-accent-100 flex items-center justify-center">
+              <span className="text-3xl">🤖</span>
             </div>
-            <p className="text-white font-semibold">Gemini AI</p>
-            <p className="text-slate-400 text-xs">AI Engine</p>
+            <p className="text-slate-900 font-semibold">Gemini AI</p>
+            <p className="text-slate-600 text-xs">AI Engine</p>
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30 flex items-center justify-center">
-              <span className="text-2xl font-bold text-green-400">⚡</span>
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-16 h-16 rounded-2xl bg-green-100 flex items-center justify-center">
+              <span className="text-3xl">⚡</span>
             </div>
-            <p className="text-white font-semibold">Supabase</p>
-            <p className="text-slate-400 text-xs">Database & Auth</p>
+            <p className="text-slate-900 font-semibold">Supabase</p>
+            <p className="text-slate-600 text-xs">Database & Auth</p>
           </div>
         </div>
       </GlassCard>

@@ -6,6 +6,7 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  @apply bg-gradient-light text-slate-900;
 }
 
 ::-webkit-scrollbar {
@@ -14,22 +15,22 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(15, 23, 42, 0.05);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(14, 165, 233, 0.2);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(14, 165, 233, 0.4);
 }
 
 ::selection {
-  background: rgba(34, 211, 238, 0.3);
-  color: white;
+  background: rgba(14, 165, 233, 0.2);
+  color: #0369a1;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -46,23 +47,23 @@ input[type="number"]::-webkit-outer-spin-button {
   }
 
   .glass-card {
-    @apply bg-white/[0.03] backdrop-blur-xl border border-white/[0.05] shadow-2xl;
+    @apply bg-white/60 backdrop-blur-md border border-primary-200/40 shadow-soft-lg;
   }
 
   .glass-card-hover {
-    @apply glass-card hover:bg-white/[0.05] hover:border-white/10 transition-all duration-300;
+    @apply glass-card hover:bg-white/80 hover:border-primary-300/60 hover:shadow-soft-lg transition-all duration-300;
   }
 
   .gradient-primary {
-    @apply bg-gradient-to-br from-cyan-500 via-blue-500 to-blue-600;
+    @apply bg-gradient-to-br from-primary-500 via-primary-600 to-accent-600;
   }
 
   .gradient-secondary {
-    @apply bg-gradient-to-br from-slate-700 via-slate-600 to-slate-700;
+    @apply bg-gradient-to-br from-slate-200 via-slate-100 to-slate-200;
   }
 
   .gradient-success {
-    @apply bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500;
+    @apply bg-gradient-to-br from-accent-500 via-accent-400 to-primary-400;
   }
 
   .gradient-border {
@@ -76,14 +77,14 @@ input[type="number"]::-webkit-outer-spin-button {
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, rgba(34, 211, 238, 0.5), rgba(59, 130, 246, 0.5));
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.4), rgba(20, 184, 166, 0.4));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-blue-500;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-600 via-primary-500 to-accent-600;
   }
 
   .animate-gradient {
@@ -92,11 +93,11 @@ input[type="number"]::-webkit-outer-spin-button {
   }
 
   .glow-cyan {
-    box-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.2);
   }
 
   .glow-blue {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
   }
 }
 
@@ -153,9 +154,9 @@ input[type="number"]::-webkit-outer-spin-button {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(34, 211, 238, 0.15) 20%,
-    rgba(34, 211, 238, 0.3) 50%,
-    rgba(34, 211, 238, 0.15) 80%,
+    rgba(14, 165, 233, 0.15) 20%,
+    rgba(14, 165, 233, 0.25) 50%,
+    rgba(14, 165, 233, 0.15) 80%,
     transparent 100%
   );
   animation: shimmer 2s ease-in-out infinite;
