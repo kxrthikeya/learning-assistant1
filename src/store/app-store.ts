@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { updateUserStatsAndBadges, updateWeakTopics, initializeUserStats } from '../lib/stats-service';
+import { updateStreakIfNeeded, updateStudyTime, updateMasteryScore, checkAndAwardAchievements } from '../lib/user-stats-service';
 import type { Note, QuizAttempt, StudySession, QuizQuestion, QuizDetail } from '../types/database';
 
 interface AppState {
@@ -63,9 +64,12 @@ export const useAppStore = create<AppState>((set, get) => ({
     set((state) => ({ quizAttempts: [data as QuizAttempt, ...state.quizAttempts] }));
 
     await Promise.all([
-      updateUserStatsAndBadges(userId),
+      updateStreakIfNeeded(userId),
+      updateMasteryScore(userId),
       updateWeakTopics(userId)
     ]).catch(err => console.error('Failed to update stats:', err));
+
+    await checkAndAwardAchievements(userId).catch(err => console.error('Failed to award achievements:', err));
 
     return data as QuizAttempt;
   },
@@ -93,7 +97,12 @@ export const useAppStore = create<AppState>((set, get) => ({
         await initializeUserStats(userId);
       }
 
-      await updateUserStatsAndBadges(userId).catch(err => console.error('Failed to update stats:', err));
+      await Promise.all([
+        updateStreakIfNeeded(userId),
+        updateStudyTime(userId, 0)
+      ]).catch(err => console.error('Failed to update streak:', err));
+
+      await checkAndAwardAchievements(userId).catch(err => console.error('Failed to award achievements:', err));
     }
   },
   setCurrentQuiz: (quiz: QuizQuestion[]) => set({ currentQuiz: quiz, currentAnswers: {} }),
