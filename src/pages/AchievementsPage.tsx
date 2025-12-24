@@ -23,6 +23,7 @@ export function AchievementsPage() {
   const [stats, setStats] = useState<UserStats | null>(null);
   const [badges, setBadges] = useState<Badge[]>([]);
   const [userAchievements, setUserAchievements] = useState<string[]>([]);
+  const [quizCount, setQuizCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -34,7 +35,7 @@ export function AchievementsPage() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [statsRes, badgesRes, achievementsRes] = await Promise.all([
+      const [statsRes, badgesRes, achievementsRes, quizRes] = await Promise.all([
         supabase
           .from('user_stats')
           .select('*')
@@ -45,6 +46,10 @@ export function AchievementsPage() {
           .from('user_achievements')
           .select('badge_id')
           .eq('user_id', user!.id),
+        supabase
+          .from('quiz_attempts')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', user!.id),
       ]);
 
       setStats(statsRes.data);
@@ -52,6 +57,7 @@ export function AchievementsPage() {
       setUserAchievements(
         (achievementsRes.data || []).map((a) => a.badge_id)
       );
+      setQuizCount(quizRes.count || 0);
     } catch (error) {
       console.error('Failed to load achievements:', error);
     } finally {
@@ -206,36 +212,42 @@ export function AchievementsPage() {
                 let remaining = badge.requirement_value;
                 let progressText = '';
 
-                if (stats) {
-                  switch (badge.requirement_type) {
-                    case 'streak':
-                      current = stats.current_streak;
-                      progress = (current / badge.requirement_value) * 100;
-                      remaining = Math.max(0, badge.requirement_value - current);
-                      progressText = remaining === 0
-                        ? 'Unlocked!'
-                        : `${remaining} day${remaining !== 1 ? 's' : ''} to go`;
-                      break;
-                    case 'time':
-                      current = stats.total_study_minutes;
-                      progress = (current / badge.requirement_value) * 100;
-                      remaining = Math.max(0, badge.requirement_value - current);
-                      progressText = remaining === 0
-                        ? 'Unlocked!'
-                        : `${Math.ceil(remaining / 60)} hour${Math.ceil(remaining / 60) !== 1 ? 's' : ''} to go`;
-                      break;
-                    case 'accuracy':
-                      current = Math.round(stats.mastery_score);
-                      progress = (current / badge.requirement_value) * 100;
-                      remaining = Math.max(0, badge.requirement_value - current);
-                      progressText = remaining === 0
-                        ? 'Unlocked!'
-                        : `${remaining}% to go`;
-                      break;
-                    case 'quizzes':
-                      progressText = 'Complete more quizzes';
-                      break;
-                  }
+                switch (badge.requirement_type) {
+                  case 'streak':
+                    current = stats?.current_streak || 0;
+                    progress = (current / badge.requirement_value) * 100;
+                    remaining = Math.max(0, badge.requirement_value - current);
+                    progressText = remaining === 0
+                      ? 'Unlocked!'
+                      : `${remaining} day${remaining !== 1 ? 's' : ''} to go`;
+                    break;
+                  case 'time':
+                    current = stats?.total_study_minutes || 0;
+                    progress = (current / badge.requirement_value) * 100;
+                    remaining = Math.max(0, badge.requirement_value - current);
+                    progressText = remaining === 0
+                      ? 'Unlocked!'
+                      : `${Math.ceil(remaining / 60)} hour${Math.ceil(remaining / 60) !== 1 ? 's' : ''} to go`;
+                    break;
+                  case 'accuracy':
+                    current = Math.round(stats?.mastery_score || 0);
+                    progress = (current / badge.requirement_value) * 100;
+                    remaining = Math.max(0, badge.requirement_value - current);
+                    progressText = remaining === 0
+                      ? 'Unlocked!'
+                      : `${remaining}% to go`;
+                    break;
+                  case 'quizzes':
+                    current = quizCount;
+                    progress = (current / badge.requirement_value) * 100;
+                    remaining = Math.max(0, badge.requirement_value - current);
+                    progressText = remaining === 0
+                      ? 'Unlocked!'
+                      : `${remaining} quiz${remaining !== 1 ? 'zes' : ''} to go`;
+                    break;
+                  default:
+                    progressText = 'Keep studying!';
+                    break;
                 }
 
                 return (
