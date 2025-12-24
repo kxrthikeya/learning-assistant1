@@ -95,7 +95,14 @@ export async function generateQuizFromSyllabusGroq(
       difficulty,
       bloomLevel,
     });
-    return result.questions;
+    const rawQuestions = result.questions || [];
+    return rawQuestions.map((q: any, idx: number) => ({
+      id: q.id || `groq-${Date.now()}-${idx}`,
+      question: q.question,
+      options: q.options,
+      correctIndex: q.correct_index !== undefined ? q.correct_index : q.correctIndex,
+      explanation: q.explanation,
+    }));
   } catch (error) {
     console.error('Groq quiz generation failed:', error);
     return generateLocalQuiz(syllabus, difficulty, numQuestions);

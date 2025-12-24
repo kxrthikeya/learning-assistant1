@@ -5,7 +5,7 @@ import { GlassCard } from '../components/GlassCard';
 import { Button } from '../components/Button';
 import { useAuthStore } from '../store/auth-store';
 import { useAppStore } from '../store/app-store';
-import { generateQuizFromSummary } from '../lib/ai-service';
+import { generateQuizFromSyllabusGroq } from '../lib/ai-service';
 import type { QuizQuestion } from '../types/database';
 
 export function QuizPage() {
@@ -15,6 +15,7 @@ export function QuizPage() {
   const location = useLocation();
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>((location.state as { noteId?: string })?.noteId || null);
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
+  const [bloomLevel, setBloomLevel] = useState<'REMEMBER' | 'UNDERSTAND' | 'APPLY' | 'ANALYZE' | 'EVALUATE' | 'CREATE'>('UNDERSTAND');
   const [questionCount, setQuestionCount] = useState(5);
   const [timerMinutes, setTimerMinutes] = useState(15);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
@@ -38,13 +39,21 @@ export function QuizPage() {
   const selectedNote = notes.find((n) => n.id === selectedNoteId);
 
   const handleGenerate = async () => {
-    if (!selectedNote?.summary) return;
+    if (!selectedNote?.raw_text) return;
     setGenerating(true); setSubmitted(false); setResult(null);
     try {
-      const questions = await generateQuizFromSummary(selectedNote.summary, difficulty, questionCount);
+      const questions = await generateQuizFromSyllabusGroq(
+        selectedNote.raw_text,
+        questionCount,
+        difficulty,
+        bloomLevel
+      );
       setCurrentQuiz(questions);
       setTimeRemaining(timerMinutes * 60);
       setTimerActive(true);
+    } catch (error) {
+      console.error('Quiz generation failed:', error);
+      alert('Failed to generate quiz. Please try again.');
     } finally { setGenerating(false); }
   };
 
@@ -67,7 +76,7 @@ export function QuizPage() {
   return (
     <GlassCard className="p-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-        <div><p className="text-xs text-cyan-300 uppercase tracking-[0.3em]">Step 3</p><h3 className="text-2xl font-bold text-white">AI Quiz Generator</h3><p className="text-slate-300 text-sm">MCQs with explanations by difficulty.</p></div>
+        <div><p className="text-xs text-cyan-300 uppercase tracking-[0.3em]">Step 3</p><h3 className="text-2xl font-bold text-white">AI Quiz Generator</h3><p className="text-slate-300 text-sm">High-quality MCQs powered by Groq AI</p></div>
         <div className="flex flex-wrap gap-2 items-center">
           <select value={selectedNoteId || ''} onChange={(e) => setSelectedNoteId(e.target.value)} className="bg-slate-900/70 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50" disabled={generating || currentQuiz.length > 0}>
             {notes.map((note) => <option key={note.id} value={note.id}>{note.title}</option>)}
@@ -75,8 +84,16 @@ export function QuizPage() {
           <select value={difficulty} onChange={(e) => setDifficulty(e.target.value as 'easy' | 'medium' | 'hard')} className="bg-slate-900/70 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50" disabled={generating || currentQuiz.length > 0}>
             <option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option>
           </select>
-          <input type="number" min={1} max={10} value={questionCount} onChange={(e) => setQuestionCount(Math.min(10, Math.max(1, parseInt(e.target.value) || 5)))} className="w-20 bg-slate-900/70 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50" disabled={generating || currentQuiz.length > 0} title="Number of questions" />
-          <Button onClick={handleGenerate} loading={generating} disabled={!selectedNote?.summary}>Generate</Button>
+          <select value={bloomLevel} onChange={(e) => setBloomLevel(e.target.value as any)} className="bg-slate-900/70 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50" disabled={generating || currentQuiz.length > 0} title="Bloom's Taxonomy Level">
+            <option value="REMEMBER">Remember</option>
+            <option value="UNDERSTAND">Understand</option>
+            <option value="APPLY">Apply</option>
+            <option value="ANALYZE">Analyze</option>
+            <option value="EVALUATE">Evaluate</option>
+            <option value="CREATE">Create</option>
+          </select>
+          <input type="number" min={1} max={20} value={questionCount} onChange={(e) => setQuestionCount(Math.min(20, Math.max(1, parseInt(e.target.value) || 5)))} className="w-20 bg-slate-900/70 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50" disabled={generating || currentQuiz.length > 0} title="Number of questions" />
+          <Button onClick={handleGenerate} loading={generating} disabled={!selectedNote?.raw_text}>Generate</Button>
         </div>
       </div>
       {currentQuiz.length > 0 && (
