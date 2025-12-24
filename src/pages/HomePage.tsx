@@ -210,7 +210,7 @@ export function HomePage() {
         <div className="space-y-4">
           <h2 className="text-2xl font-bold text-slate-900">Study Activity</h2>
           <GlassCard className="p-6">
-            <ContributionHeatmap userId={user.id} />
+            <ContributionHeatmap quizAttempts={quizAttempts} uploads={notes} currentStreak={streak} />
           </GlassCard>
         </div>
       )}
